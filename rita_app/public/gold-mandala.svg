@@ -1,0 +1,11 @@
+﻿<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="#D4AF37" stroke-width="2" opacity="0.05">
+    <circle cx="300" cy="300" r="50"/>
+    <circle cx="300" cy="300" r="150" stroke-dasharray="10 10"/>
+    <g id="gm-inner"><path d="M300 250 C 350 150, 400 200, 300 50 C 200 200, 250 150, 300 250"/></g>
+    <g transform="rotate(45 300 300)"><use href="#gm-inner"/></g>
+    <g transform="rotate(90 300 300)"><use href="#gm-inner"/></g>
+    <g transform="rotate(135 300 300)"><use href="#gm-inner"/></g>
+    <circle cx="300" cy="300" r="280"/>
+  </g>
+</svg>

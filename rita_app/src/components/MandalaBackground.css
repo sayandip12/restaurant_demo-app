@@ -1,0 +1,227 @@
+/* ============================================
+   Mandala Background System
+   
+   Overlay approach: z-index 2 sits above page 
+   content but below navbar (z-500) and modals.
+   pointer-events: none = no interaction blocking.
+   Slow rotation for luxury premium feel.
+   ============================================ */
+
+.mandala-bg-container {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
+  overflow: hidden;
+}
+
+.bg-mandala {
+  position: absolute;
+  color: #C4A05A;
+  opacity: 0.16;
+  transform-origin: center;
+  will-change: transform; /* GPU acceleration */
+}
+
+.mandala-svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+/* ============================================
+   ROTATION ANIMATIONS
+   Extremely slow, barely noticeable wheel-like 
+   spin for luxury premium feel.
+   ============================================ */
+
+@keyframes mandala-spin-cw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+@keyframes mandala-spin-ccw {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+
+/* Top-left & bottom-left: clockwise */
+.bg-mandala-top-left {
+  animation: mandala-spin-cw 150s linear infinite;
+}
+
+.bg-mandala-bottom-left {
+  animation: mandala-spin-cw 165s linear infinite;
+}
+
+/* Top-right & bottom-right: counter-clockwise */
+.bg-mandala-top-right {
+  animation: mandala-spin-ccw 195s linear infinite;
+}
+
+.bg-mandala-bottom-right {
+  animation: mandala-spin-ccw 180s linear infinite;
+}
+
+/* ============================================
+   DEFAULT CORNER PLACEMENTS
+   ============================================ */
+
+.bg-mandala-top-left {
+  top: -320px;
+  left: -320px;
+  width: 800px;
+  height: 800px;
+}
+
+.bg-mandala-top-right {
+  top: -280px;
+  right: -280px;
+  width: 700px;
+  height: 700px;
+}
+
+.bg-mandala-bottom-left {
+  bottom: -280px;
+  left: -280px;
+  width: 700px;
+  height: 700px;
+}
+
+.bg-mandala-bottom-right {
+  bottom: -350px;
+  right: -350px;
+  width: 900px;
+  height: 900px;
+}
+
+/* ============================================
+   PAGE LAYOUTS
+   ============================================ */
+
+/* HOME: Large top-left + bottom-right */
+.mandala-bg-container.page-home .bg-mandala-top-left {
+  top: -250px;
+  left: -250px;
+  width: 850px;
+  height: 850px;
+  opacity: 0.18;
+}
+
+.mandala-bg-container.page-home .bg-mandala-bottom-right {
+  bottom: -300px;
+  right: -300px;
+  width: 950px;
+  height: 950px;
+  opacity: 0.14;
+}
+
+.mandala-bg-container.page-home .bg-mandala-top-right,
+.mandala-bg-container.page-home .bg-mandala-bottom-left {
+  opacity: 0;
+}
+
+/* MENU: Side accents */
+.mandala-bg-container.page-menu .bg-mandala-top-left {
+  top: 8%;
+  left: -350px;
+  width: 700px;
+  height: 700px;
+  opacity: 0.14;
+}
+
+.mandala-bg-container.page-menu .bg-mandala-top-right {
+  top: 40%;
+  right: -350px;
+  width: 700px;
+  height: 700px;
+  opacity: 0.14;
+}
+
+.mandala-bg-container.page-menu .bg-mandala-bottom-left,
+.mandala-bg-container.page-menu .bg-mandala-bottom-right {
+  opacity: 0;
+}
+
+/* CONTACT: Opposite corners */
+.mandala-bg-container.page-contact .bg-mandala-top-right {
+  opacity: 0.14;
+}
+.mandala-bg-container.page-contact .bg-mandala-bottom-left {
+  opacity: 0.14;
+}
+.mandala-bg-container.page-contact .bg-mandala-top-left,
+.mandala-bg-container.page-contact .bg-mandala-bottom-right {
+  opacity: 0;
+}
+
+/* ORDER STATUS: Elegant corners — top-left + bottom-right */
+.mandala-bg-container.page-order .bg-mandala-top-left {
+  top: -220px;
+  left: -220px;
+  width: 750px;
+  height: 750px;
+  opacity: 0.16;
+}
+
+.mandala-bg-container.page-order .bg-mandala-bottom-right {
+  bottom: -280px;
+  right: -280px;
+  width: 800px;
+  height: 800px;
+  opacity: 0.13;
+}
+
+.mandala-bg-container.page-order .bg-mandala-top-right,
+.mandala-bg-container.page-order .bg-mandala-bottom-left {
+  opacity: 0;
+}
+
+/* DASHBOARD / PROFILE: Minimal corner ornaments */
+.mandala-bg-container.page-dashboard .bg-mandala {
+  width: 500px;
+  height: 500px;
+  opacity: 0.08;
+}
+.mandala-bg-container.page-dashboard .bg-mandala-top-left {
+  top: -250px;
+  left: -250px;
+}
+.mandala-bg-container.page-dashboard .bg-mandala-bottom-right {
+  bottom: -250px;
+  right: -250px;
+}
+.mandala-bg-container.page-dashboard .bg-mandala-top-right,
+.mandala-bg-container.page-dashboard .bg-mandala-bottom-left {
+  opacity: 0;
+}
+
+/* ============================================
+   RESPONSIVE
+   ============================================ */
+@media (max-width: 768px) {
+  .bg-mandala-top-left {
+    width: 500px !important;
+    height: 500px !important;
+    top: -200px !important;
+    left: -200px !important;
+  }
+  .bg-mandala-bottom-right {
+    width: 550px !important;
+    height: 550px !important;
+    bottom: -220px !important;
+    right: -220px !important;
+  }
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  .bg-mandala-top-left,
+  .bg-mandala-top-right,
+  .bg-mandala-bottom-left,
+  .bg-mandala-bottom-right {
+    animation: none !important;
+  }
+}

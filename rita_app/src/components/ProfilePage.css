@@ -1,0 +1,453 @@
+/* ============================================
+   PROFILE PAGE
+   ============================================ */
+
+.profile-page {
+  background: var(--color-bg);
+  min-height: 100dvh;
+  padding-bottom: var(--space-16);
+}
+
+.profile-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+/* ── Header Card ── */
+.profile-header-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  gap: var(--space-5);
+  position: relative;
+}
+
+.profile-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #16a34a, #22c55e);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.profile-avatar span {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  color: var(--white);
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-info__name {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.profile-info__detail {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  margin-bottom: 2px;
+}
+
+.profile-info__detail svg {
+  color: var(--gray-400);
+  flex-shrink: 0;
+}
+
+.profile-edit-btn {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+/* ── Tabs ── */
+.profile-tabs {
+  display: flex;
+  gap: var(--space-1);
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 4px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-light);
+}
+
+.profile-tab {
+  flex: 1;
+  padding: 10px 16px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-500);
+  border-radius: var(--radius-md);
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+}
+
+.profile-tab:hover {
+  color: var(--gray-700);
+  background: var(--color-bg);
+}
+
+.profile-tab--active {
+  background: var(--green-50);
+  color: var(--color-primary);
+}
+
+/* ── Tab Content ── */
+.profile-tab-content {
+  min-height: 200px;
+}
+
+.profile-section {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+/* ── Order History ── */
+.order-history-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-light);
+  transition: box-shadow var(--transition-base);
+}
+
+.order-history-card:hover {
+  box-shadow: var(--shadow-sm);
+}
+
+.order-history-card__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+.order-history-card__id {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  margin-right: var(--space-3);
+}
+
+.order-history-card__date {
+  font-size: var(--text-xs);
+  color: var(--gray-400);
+}
+
+.order-history-card__status {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: var(--radius-full);
+  background: #f0fdf4;
+  color: #16a34a;
+}
+
+.order-history-card__items {
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+  margin-bottom: 12px;
+}
+
+.order-history-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.order-history-card__total {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* ── Address Cards ── */
+.address-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 20px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-light);
+}
+
+.address-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+  margin-bottom: 8px;
+}
+
+.address-card__icon {
+  font-size: 20px;
+}
+
+.address-card__label {
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.address-card__text {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.address-card__actions {
+  display: flex;
+  gap: var(--space-3);
+}
+
+.address-action-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--gray-500);
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--color-border);
+  background: var(--color-bg-secondary);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.address-action-btn:hover {
+  background: var(--color-bg);
+  color: var(--gray-700);
+}
+
+.address-action-btn--danger:hover {
+  background: var(--red-50);
+  color: var(--red-600);
+  border-color: var(--red-100);
+}
+
+.add-address-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  width: 100%;
+  padding: 14px;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-lg);
+  background: none;
+  color: var(--gray-500);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.add-address-btn:hover {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  background: var(--green-50);
+}
+
+/* ── Loyalty Card ── */
+.loyalty-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+}
+
+.loyalty-card__header {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  margin-bottom: var(--space-6);
+}
+
+.loyalty-card__icon {
+  font-size: 32px;
+}
+
+.loyalty-card__title {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.loyalty-card__subtitle {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--gray-400);
+}
+
+.loyalty-card__points {
+  text-align: center;
+  margin-bottom: var(--space-5);
+}
+
+.loyalty-card__number {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: var(--text-5xl);
+  font-weight: 800;
+  color: var(--color-primary);
+  line-height: 1;
+}
+
+.loyalty-card__label {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  font-weight: 500;
+}
+
+.loyalty-progress {
+  margin-bottom: var(--space-4);
+}
+
+.loyalty-progress__bar {
+  height: 10px;
+  background: var(--gray-100);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.loyalty-progress__fill {
+  height: 100%;
+  background: linear-gradient(90deg, #16a34a, #22c55e);
+  border-radius: var(--radius-full);
+  transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.loyalty-progress__labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+.loyalty-card__note {
+  text-align: center;
+  font-size: var(--text-sm);
+  color: var(--color-accent);
+  font-weight: 600;
+  padding: 12px;
+  background: var(--orange-50);
+  border-radius: var(--radius-md);
+}
+
+/* ── Loyalty Perks ── */
+.loyalty-perks {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  box-shadow: var(--shadow-xs);
+  border: 1px solid var(--color-border-light);
+}
+
+.loyalty-perks__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: var(--space-4);
+}
+
+.loyalty-perk {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  padding: 12px 0;
+  border-bottom: 1px solid var(--color-border-light);
+}
+
+.loyalty-perk:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.loyalty-perk__icon {
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.loyalty-perk__name {
+  display: block;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-800);
+}
+
+.loyalty-perk__desc {
+  display: block;
+  font-size: var(--text-xs);
+  color: var(--gray-400);
+  margin-top: 1px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .profile-page {
+    padding-bottom: calc(var(--mobile-nav-height) + var(--space-6));
+  }
+
+  .profile-container {
+    padding: var(--space-4) var(--space-4);
+  }
+
+  .profile-header-card {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .profile-info__detail {
+    justify-content: center;
+  }
+
+  .profile-edit-btn {
+    position: static;
+    margin-top: var(--space-3);
+  }
+
+  .profile-tabs {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .profile-tab {
+    padding: 10px 12px;
+    font-size: var(--text-xs);
+  }
+}

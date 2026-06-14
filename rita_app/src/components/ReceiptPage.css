@@ -1,0 +1,397 @@
+/* ============================================
+   ReceiptPage — Public Receipt View
+   /receipt/:orderId
+   ============================================ */
+
+/* ═════════════════════════════════════════
+   @page — MUST be at top-level (not inside @media)
+   Controls paper size for thermal printers.
+   58mm is the standard roll width.
+   Chrome/Edge honor this for physical printers.
+   ═════════════════════════════════════════ */
+@page {
+  size: 58mm auto;
+  margin: 0;
+}
+
+.receipt-page {
+  padding-top: calc(var(--navbar-height) + 24px);
+  padding-bottom: 60px;
+  min-height: 100dvh;
+  background: var(--color-bg);
+}
+
+.receipt-page-container {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 0 var(--space-6);
+}
+
+/* ─────────── Loading ─────────── */
+.receipt-page-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 120px 24px;
+  color: var(--gray-500);
+  font-size: var(--text-sm);
+}
+
+@keyframes receipt-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.receipt-spinner-icon {
+  width: 32px;
+  height: 32px;
+  animation: receipt-spin 1s linear infinite;
+  color: var(--color-accent);
+}
+
+/* ─────────── Not Found ─────────── */
+.receipt-page-not-found {
+  text-align: center;
+  padding: 80px 24px;
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-border-light);
+}
+
+.receipt-not-found-icon {
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 20px;
+  background: var(--orange-100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--orange-600);
+}
+
+.receipt-not-found-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+.receipt-not-found-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--gray-800);
+  margin-bottom: 12px;
+}
+
+.receipt-not-found-text {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  margin-bottom: 28px;
+  line-height: 1.6;
+}
+
+.receipt-not-found-text strong {
+  color: var(--gray-700);
+  font-family: var(--font-heading);
+}
+
+.receipt-not-found-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 28px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--white);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.receipt-not-found-btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+}
+
+.receipt-not-found-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ─────────── Header ─────────── */
+.receipt-page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.receipt-page-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--gray-900);
+}
+
+.receipt-page-order-id {
+  background: var(--green-100);
+  color: var(--green-800);
+  padding: 4px 14px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  font-family: var(--font-heading);
+}
+
+/* ─────────── Receipt Paper ─────────── */
+.receipt-page-paper-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
+}
+
+.receipt-page-paper {
+  background: #fffff5;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 24px 20px;
+  max-width: 400px;
+  width: 100%;
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(0, 0, 0, 0.03);
+  position: relative;
+}
+
+/* Torn paper edge effect */
+.receipt-page-paper::before,
+.receipt-page-paper::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 8px;
+  background: linear-gradient(
+    135deg,
+    #fffff5 33.33%,
+    transparent 33.33%,
+    transparent 66.66%,
+    #fffff5 66.66%
+  );
+  background-size: 12px 8px;
+}
+
+.receipt-page-paper::before {
+  top: -8px;
+}
+
+.receipt-page-paper::after {
+  bottom: -8px;
+  transform: rotate(180deg);
+}
+
+.receipt-page-text {
+  font-family: 'Courier New', 'Courier', monospace;
+  font-size: 12px;
+  line-height: 1.5;
+  color: #333;
+  white-space: pre-wrap;
+  word-break: break-word;
+  margin: 0;
+}
+
+/* ─────────── Actions ─────────── */
+.receipt-page-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.receipt-page-print-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px 24px;
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--white);
+  background: var(--color-accent);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.receipt-page-print-btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(249, 115, 22, 0.3);
+}
+
+.receipt-page-print-btn:active {
+  transform: scale(0.98);
+}
+
+.receipt-page-print-btn svg {
+  width: 20px;
+  height: 20px;
+}
+
+/* ─────────── Footer Link ─────────── */
+.receipt-page-footer {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.receipt-page-menu-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 20px;
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--color-bg-secondary);
+  border: 2px solid var(--color-primary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  text-decoration: none;
+}
+
+.receipt-page-menu-link:hover {
+  background: var(--green-50);
+  transform: translateY(-1px);
+}
+
+.receipt-page-menu-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+/* ═════════════════════════════════════════
+   PRINT STYLES — Receipt Page
+   Only the receipt prints. Everything else
+   is hidden via display:none.
+   ═════════════════════════════════════════ */
+@media print {
+  /* 1. Reset all wrapper elements — prevent ghost pages from flex/min-height */
+  html,
+  body,
+  #root,
+  .app-layout,
+  .main-content,
+  .receipt-page,
+  .receipt-page-container {
+    display: block !important;
+    height: auto !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: none !important;
+    overflow: visible !important;
+  }
+
+  /* 2. Hide ALL non-receipt UI elements */
+  .navbar,
+  .mobile-nav,
+  .footer,
+  .mandala-bg-container,
+  .mandala-bg-container *,
+  .whatsapp-btn,
+  .receipt-page-header,
+  .receipt-page-actions,
+  .receipt-page-footer,
+  .receipt-page-loading,
+  .receipt-page-not-found {
+    display: none !important;
+  }
+
+  /* 3. The print area wrapper — exact thermal width, no margin */
+  #receipt-page-print-area {
+    position: relative !important;
+    width: 58mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    display: block !important;
+  }
+
+  /* 4. The paper element — 58mm, no decorations */
+  .receipt-page-paper {
+    box-shadow: none !important;
+    border: none !important;
+    border-radius: 0 !important;
+    width: 58mm !important;
+    max-width: 58mm !important;
+    padding: 2mm 1mm !important;
+    background: #fff !important;
+  }
+
+  /* 5. Remove torn paper effect */
+  .receipt-page-paper::before,
+  .receipt-page-paper::after {
+    display: none !important;
+  }
+
+  /* 6. Receipt text — thermal-optimized typography */
+  .receipt-page-text {
+    font-family: 'Courier New', Courier, monospace !important;
+    font-size: 9pt !important;
+    line-height: 1.2 !important;
+    font-weight: normal !important;
+    color: #000 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    white-space: pre !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    letter-spacing: 0 !important;
+  }
+}
+
+/* ═════════════════════════════════════════
+   RESPONSIVE
+   ═════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .receipt-page {
+    padding-bottom: calc(var(--mobile-nav-height) + 20px);
+  }
+
+  .receipt-page-container {
+    padding: 0 var(--space-4);
+  }
+
+  .receipt-page-title {
+    font-size: var(--text-xl);
+  }
+
+  .receipt-page-paper {
+    padding: 16px 12px;
+  }
+
+  .receipt-page-text {
+    font-size: 11px;
+    line-height: 1.4;
+  }
+
+  .receipt-page-not-found {
+    padding: 60px 16px;
+  }
+
+  .receipt-not-found-title {
+    font-size: var(--text-xl);
+  }
+}

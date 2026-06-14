@@ -1,0 +1,314 @@
+/* ============================================
+   OFFERS & DEALS PAGE
+   ============================================ */
+
+.offers-page {
+  background: var(--color-bg);
+  min-height: 100dvh;
+  padding-bottom: var(--space-16);
+}
+
+.offers-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: var(--space-8) var(--space-6);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-8);
+}
+
+/* ── Header ── */
+.offers-header {
+  text-align: center;
+}
+
+.offers-header__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-3xl);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+
+.offers-header__subtitle {
+  font-size: var(--text-base);
+  color: var(--gray-500);
+}
+
+/* ── Coupon Grid ── */
+.coupons-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--space-6);
+}
+
+/* ── Coupon Card ── */
+.coupon-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  display: flex;
+  overflow: hidden;
+  border: 1px solid var(--color-border-light);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.coupon-card:hover {
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.coupon-card__strip {
+  width: 6px;
+  flex-shrink: 0;
+}
+
+.coupon-card__strip--green  { background: linear-gradient(180deg, #16a34a, #22c55e); }
+.coupon-card__strip--orange { background: linear-gradient(180deg, #ea580c, #f97316); }
+.coupon-card__strip--blue   { background: linear-gradient(180deg, #2563eb, #3b82f6); }
+.coupon-card__strip--purple { background: linear-gradient(180deg, #7c3aed, #8b5cf6); }
+
+.coupon-card__body {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.coupon-card__top {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.coupon-card__scissors {
+  font-size: 18px;
+}
+
+.coupon-card__code-box {
+  display: inline-flex;
+  padding: 5px 14px;
+  border: 2px dashed var(--gray-300);
+  border-radius: var(--radius-sm);
+  background: var(--color-bg);
+}
+
+.coupon-card__code {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--gray-800);
+  letter-spacing: 0.08em;
+}
+
+.coupon-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--gray-900);
+}
+
+.coupon-card__desc {
+  font-size: var(--text-xs);
+  color: var(--gray-500);
+  line-height: 1.5;
+}
+
+.coupon-card__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 8px;
+  border-top: 1px solid var(--color-border-light);
+}
+
+.coupon-card__validity {
+  font-size: 11px;
+  color: var(--gray-400);
+  font-weight: 500;
+}
+
+.coupon-copy-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  font-size: var(--text-xs);
+  font-weight: 600;
+  color: var(--color-primary);
+  background: var(--green-50);
+  border: 1px solid var(--green-100);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all var(--transition-fast);
+}
+
+.coupon-copy-btn:hover {
+  background: var(--green-100);
+}
+
+.coupon-copy-btn--copied {
+  color: var(--white);
+  background: var(--green-600);
+  border-color: var(--green-600);
+}
+
+/* ── Referral Card ── */
+.referral-card {
+  background: var(--color-bg-secondary);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--color-border-light);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+
+.referral-card__content {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+.referral-card__icon {
+  font-size: 40px;
+  flex-shrink: 0;
+}
+
+.referral-card__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin-bottom: 4px;
+}
+
+.referral-card__desc {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.5;
+}
+
+/* ── Festival Banner ── */
+.festival-banner {
+  text-align: center;
+  padding: 40px 28px;
+  border-radius: var(--radius-xl);
+  background: linear-gradient(135deg, #f97316 0%, #fb923c 30%, #fbbf24 60%, #22c55e 100%);
+  color: var(--white);
+  position: relative;
+  overflow: hidden;
+}
+
+.festival-banner::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+              radial-gradient(circle at 80% 20%, rgba(255,255,255,0.08) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.festival-banner__emoji {
+  font-size: 48px;
+  display: block;
+  margin-bottom: var(--space-4);
+}
+
+.festival-banner__title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 700;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.festival-banner__desc {
+  font-size: var(--text-sm);
+  opacity: 0.9;
+  max-width: 500px;
+  margin: 0 auto;
+  line-height: 1.5;
+  position: relative;
+}
+
+.festival-banner__dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  margin-top: var(--space-5);
+  position: relative;
+}
+
+.festival-banner__dots span {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.festival-banner__dots span:first-child {
+  background: var(--color-bg-secondary);
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .offers-page {
+    padding-bottom: calc(var(--mobile-nav-height) + var(--space-6));
+  }
+
+  .offers-container {
+    padding: var(--space-4) var(--space-4);
+    gap: var(--space-6);
+  }
+
+  .offers-header__title {
+    font-size: var(--text-2xl);
+  }
+
+  .coupons-grid {
+    grid-template-columns: 1fr;
+    gap: var(--space-4);
+  }
+
+  .referral-card {
+    flex-direction: column;
+    text-align: center;
+    padding: 24px 20px;
+  }
+
+  .referral-card__content {
+    flex-direction: column;
+  }
+
+  .festival-banner {
+    padding: 32px 20px;
+  }
+
+  .festival-banner__emoji {
+    font-size: 36px;
+  }
+
+  .festival-banner__title {
+    font-size: var(--text-xl);
+  }
+}
+
+@media (max-width: 430px) {
+  .coupon-card__body {
+    padding: 16px;
+  }
+
+  .coupon-card__bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}

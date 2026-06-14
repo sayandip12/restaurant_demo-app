@@ -1,0 +1,8 @@
+/* ============================================
+   RITA FOODLAND — Homepage Container Styles
+   ============================================ */
+
+.homepage {
+  width: 100%;
+  background-color: var(--color-bg);
+}

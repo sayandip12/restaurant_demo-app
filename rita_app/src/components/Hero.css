@@ -1,0 +1,335 @@
+/* ============================================
+   RITA FOODLAND — Hero Section (Full Screen)
+   ============================================ */
+
+/* ---------- Hero Section ---------- */
+.hero-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 700px;
+  overflow: hidden;
+  background: linear-gradient(135deg, #EFE5D5 0%, #E6D7C2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ---------- Hero Content ---------- */
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  text-align: left;
+  padding: 0 5%;
+  max-width: 1400px;
+  width: 100%;
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.hero-left {
+  flex: 1;
+  max-width: 600px;
+  /* Entrance animation */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+}
+
+.hero-right {
+  flex: 1;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  position: relative;
+  height: 500px;
+  max-width: 600px;
+  /* Entrance animation */
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s;
+}
+
+.hero-left.is-visible,
+.hero-right.is-visible {
+  opacity: 1;
+  transform: translate(0);
+}
+
+.hero-text-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 24px;
+}
+
+
+
+/* ---------- Badge Pill ---------- */
+.hero-badge-pill {
+  display: inline-flex;
+  align-items: center;
+  color: #F97316;
+  background: rgba(249, 115, 22, 0.1);
+  padding: 8px 20px;
+  border-radius: 100px;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+/* ---------- Title ---------- */
+.hero-title {
+  font-family: var(--font-heading);
+  font-size: clamp(3.5rem, 6vw, 5.5rem);
+  font-weight: 800;
+  color: #F97316;
+  line-height: 1.05;
+  margin: 0;
+  letter-spacing: -1px;
+}
+
+/* ---------- Tagline ---------- */
+.hero-tagline {
+  font-family: var(--font-heading);
+  font-size: clamp(1.5rem, 3vw, 2.5rem);
+  color: #111827;
+  margin: 0;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+/* ---------- Description ---------- */
+.hero-desc {
+  font-size: clamp(1rem, 1.5vw, 1.25rem);
+  color: #6B7280;
+  margin: 0;
+  line-height: 1.6;
+  max-width: 90%;
+}
+
+/* ---------- CTA Buttons ---------- */
+.hero-cta-group {
+  margin-top: 16px;
+}
+
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px 40px;
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #ffffff;
+  background-color: #F97316;
+  border-radius: 16px;
+  text-decoration: none;
+  transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+  box-shadow: 0 10px 20px rgba(249, 115, 22, 0.2);
+}
+
+.hero-btn:hover {
+  background-color: #EA580C;
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(249, 115, 22, 0.3);
+}
+
+/* ---------- Slider ---------- */
+.hero-slider-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-slide {
+  position: absolute;
+  width: 90%;
+  height: 90%;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  transform: scale(0.9) translateX(20px);
+  z-index: 1;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1) translateX(0);
+  z-index: 3;
+}
+
+.hero-slide.prev {
+  opacity: 0.6;
+  transform: scale(0.85) translateX(-40px);
+  z-index: 2;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 24px;
+}
+
+/* ---------- Trust Stats Row ---------- */
+
+
+/* ---------- Feature Cards Strip ---------- */
+.hero-features {
+  padding-top: 60px;
+  padding-bottom: 60px;
+}
+
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* ---------- Feature Card ---------- */
+.feature-card {
+  background: transparent;
+  padding: 16px;
+  border: none;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  align-items: center;
+  text-align: center;
+  transition: transform var(--transition-base);
+  cursor: default;
+}
+
+.feature-card:hover {
+  transform: translateY(-4px);
+}
+
+.feature-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1F2937;
+  margin-bottom: 4px;
+}
+
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.feature-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.feature-desc {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.4;
+  margin: 0;
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+/* ---------- Tablet & below ---------- */
+@media (max-width: 1024px) {
+  .hero-content {
+    gap: 20px;
+  }
+  .hero-right {
+    height: 400px;
+  }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  .hero-section {
+    min-height: auto;
+    height: auto;
+    padding: 120px 0 60px; /* Space for navbar */
+  }
+
+  .hero-content {
+    flex-direction: column;
+    padding: 0 6%;
+    gap: 40px;
+  }
+
+  .hero-left, .hero-right {
+    max-width: 100%;
+    width: 100%;
+  }
+
+  .hero-right {
+    height: 350px;
+    justify-content: center;
+  }
+
+  .hero-text-wrapper {
+    align-items: flex-start;
+  }
+
+  .hero-badge-pill {
+    font-size: 0.75rem;
+    padding: 6px 16px;
+  }
+  
+  .hero-desc {
+    max-width: 100%;
+  }
+
+  .features-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .feature-card {
+    padding: 20px 16px;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 12px;
+  }
+
+  .feature-icon {
+    font-size: 28px;
+  }
+}
+
+/* ---------- Small Mobile ---------- */
+@media (max-width: 430px) {
+  .hero-right {
+    height: 250px;
+  }
+  
+  .hero-cta-group {
+    width: 100%;
+  }
+  
+  .hero-btn {
+    width: 100%;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,215 @@
+/* ============================================
+   RITA FOODLAND — Popular Dishes Section
+   ============================================ */
+
+.popular-section {
+  background: var(--color-bg);
+}
+
+/* ---------- Grid ---------- */
+.popular-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+}
+
+/* ---------- Card ---------- */
+.popular-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: var(--color-bg-secondary);
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.popular-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-4px);
+}
+
+/* ---------- Image ---------- */
+.popular-card-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.popular-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+
+.popular-card:hover .popular-card-img {
+  transform: scale(1.05);
+}
+
+/* ---------- Badge Overlay (top-left) ---------- */
+.popular-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 2;
+  font-size: 11px;
+  padding: 4px 10px;
+}
+
+/* ---------- Veg/NonVeg Dot (top-right) ---------- */
+.popular-veg-dot {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+}
+
+/* ---------- Card Body ---------- */
+.popular-card-body {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px;
+  flex: 1;
+}
+
+.popular-card-name {
+  font-family: var(--font-heading);
+  font-size: var(--text-base);
+  font-weight: 600;
+  color: var(--gray-900);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.popular-card-desc {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ---------- Footer Row ---------- */
+.popular-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.popular-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.popular-price {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* ---------- Add Button ---------- */
+.popular-add-btn {
+  background: var(--color-accent);
+  color: var(--white);
+  border: none;
+  padding: 8px 18px;
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  white-space: nowrap;
+  text-transform: uppercase;
+}
+
+.popular-add-btn:hover {
+  background: var(--color-accent-hover);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.25);
+}
+
+/* ---------- Quantity Controls ---------- */
+.popular-qty-controls {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  border: 2px solid var(--color-accent);
+  border-radius: var(--radius-full);
+  overflow: hidden;
+}
+
+.qty-btn {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-accent);
+  color: var(--white);
+  border: none;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background var(--transition-fast);
+  line-height: 1;
+}
+
+.qty-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+.qty-count {
+  min-width: 28px;
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 1024px) {
+  .popular-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .popular-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+  }
+
+  .popular-card-img-wrapper {
+    height: 150px;
+  }
+
+  .popular-card-body {
+    padding: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .popular-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .popular-card-img-wrapper {
+    height: 200px;
+  }
+}

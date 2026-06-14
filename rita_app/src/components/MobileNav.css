@@ -1,0 +1,85 @@
+/* ============================================
+   RITA FOODLAND — Mobile Bottom Navigation
+   ============================================ */
+
+.mobile-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: var(--mobile-nav-height);
+    background: var(--color-bg-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    z-index: var(--z-navbar);
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.06);
+    border-top: 1px solid var(--gray-100);
+    padding: 0 var(--space-2);
+    /* Safe area for notched phones */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  .mobile-nav__tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    height: 100%;
+    text-decoration: none;
+    color: var(--gray-400);
+    transition: color var(--transition-fast);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-nav__tab--active {
+    color: var(--color-primary);
+  }
+
+  .mobile-nav__icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+  }
+
+  .mobile-nav__badge {
+    position: absolute;
+    top: -6px;
+    right: -10px;
+    min-width: 16px;
+    height: 16px;
+    background: var(--red-500);
+    color: var(--white);
+    font-size: 10px;
+    font-weight: 700;
+    border-radius: var(--radius-full);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    line-height: 1;
+    pointer-events: none;
+  }
+
+  .mobile-nav__label {
+    font-size: 10px;
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.2px;
+  }
+
+  .mobile-nav__tab--active .mobile-nav__label {
+    font-weight: 600;
+  }
+}

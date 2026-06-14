@@ -1,0 +1,12 @@
+﻿<svg width="200" height="200" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="rgb(165, 140, 110)" stroke-width="1.5" opacity="0.08">
+    <path d="M100 0 L150 50 L100 100 L50 50 Z" />
+    <path d="M100 100 L150 150 L100 200 L50 150 Z" />
+    <path d="M0 100 L50 50 L100 100 L50 150 Z" />
+    <path d="M200 100 L150 50 L100 100 L150 150 Z" />
+    <circle cx="100" cy="50" r="15"/>
+    <circle cx="100" cy="150" r="15"/>
+    <circle cx="50" cy="100" r="15"/>
+    <circle cx="150" cy="100" r="15"/>
+  </g>
+</svg>

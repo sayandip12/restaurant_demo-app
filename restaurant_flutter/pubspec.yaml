@@ -1,0 +1,87 @@
+name: restaurant_flutter
+description: Rita Foodland - Authentic Indian & Chinese Cuisine
+publish_to: 'none'
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # State Management
+  flutter_riverpod: ^2.6.1
+  riverpod_annotation: ^2.6.1
+
+  # Navigation
+  go_router: ^14.6.2
+
+  # Supabase
+  supabase_flutter: ^2.8.4
+
+  # Local Storage
+  shared_preferences: ^2.3.3
+
+  # Network Images
+  cached_network_image: ^3.4.1
+
+  # PDF
+  pdf: ^3.11.1
+  printing: ^5.13.2
+
+  # URL Launcher (WhatsApp, phone, maps)
+  url_launcher: ^6.3.1
+
+  # Share
+  share_plus: ^10.1.4
+
+  # Fonts
+  google_fonts: ^6.2.1
+
+  # Charts
+  fl_chart: ^0.70.2
+
+  # SVG
+  flutter_svg: ^2.0.10+1
+
+  # Animations
+  flutter_animate: ^4.5.0
+
+  # Connectivity
+  connectivity_plus: ^6.1.4
+
+  # Env / dotenv
+  flutter_dotenv: ^5.2.1
+
+  # Icons
+  cupertino_icons: ^1.0.8
+  intl: ^0.20.2
+  flutter_native_splash: ^2.4.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+  flutter_launcher_icons: ^0.14.3
+
+flutter_launcher_icons:
+  android: true
+  image_path: "assets/images/logo.png"
+  adaptive_icon_background: "#EFE5D5"
+  adaptive_icon_foreground: "assets/images/logo.png"
+
+flutter_native_splash:
+  color: "#EFE5D5"
+  image: assets/images/logo.png
+  android_gravity: center
+  fullscreen: false
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/images/food/
+    - .env
+

@@ -1,0 +1,240 @@
+/* ============================================
+   AdminDashboard — Coming Soon Placeholder
+   /admin route
+   ============================================ */
+
+/* ─── Page wrapper — full screen, centered ─── */
+.admin-coming-soon-page {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-6);
+  padding-top: calc(var(--navbar-height) + var(--space-6));
+  background: var(--color-bg);
+  overflow: hidden;
+}
+
+/* ─── Decorative blurred background orbs ─── */
+.admin-coming-soon-blur {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.admin-coming-soon-blur::before {
+  content: '';
+  position: absolute;
+  top: 10%;
+  left: 15%;
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(var(--color-primary-rgb, 34, 197, 94), 0.08), transparent 70%);
+  filter: blur(60px);
+}
+
+.admin-coming-soon-blur::after {
+  content: '';
+  position: absolute;
+  bottom: 15%;
+  right: 10%;
+  width: 350px;
+  height: 350px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(249, 115, 22, 0.07), transparent 70%);
+  filter: blur(60px);
+}
+
+/* ─── Main card ─── */
+.admin-coming-soon-card {
+  position: relative;
+  z-index: 1;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-2xl, 24px);
+  padding: 48px 40px;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.06),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+/* ─── Lock icon ─── */
+.admin-coming-soon-icon {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 24px;
+  background: var(--orange-100, #ffedd5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--color-accent, #f97316);
+}
+
+.admin-coming-soon-icon svg {
+  width: 34px;
+  height: 34px;
+}
+
+/* ─── Brand ─── */
+.admin-coming-soon-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  padding: 6px 16px;
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-full);
+}
+
+.admin-coming-soon-logo {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 800;
+  color: var(--color-primary);
+  background: var(--green-100, #dcfce7);
+  padding: 2px 8px;
+  border-radius: var(--radius-sm);
+}
+
+.admin-coming-soon-name {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 600;
+  color: var(--gray-700);
+}
+
+/* ─── Title & subtitle ─── */
+.admin-coming-soon-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-2xl);
+  font-weight: 800;
+  color: var(--gray-900);
+  margin-bottom: 6px;
+}
+
+.admin-coming-soon-subtitle {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--color-accent);
+  margin-bottom: 16px;
+  letter-spacing: -0.5px;
+}
+
+/* ─── Description ─── */
+.admin-coming-soon-description {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.7;
+  margin-bottom: 0;
+}
+
+/* ─── Divider ─── */
+.admin-coming-soon-divider {
+  width: 100%;
+  height: 1px;
+  background: var(--color-border-light);
+  margin: 28px 0;
+}
+
+/* ─── Planned features list ─── */
+.admin-coming-soon-features-label {
+  font-family: var(--font-heading);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--gray-400);
+  margin-bottom: 14px;
+}
+
+.admin-coming-soon-features {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 32px;
+  text-align: left;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.admin-coming-soon-features li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+}
+
+.admin-feature-dot {
+  flex-shrink: 0;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--color-primary);
+  opacity: 0.6;
+}
+
+/* ─── Contact CTA ─── */
+.admin-coming-soon-contact-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px 24px;
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--white);
+  background: var(--color-primary);
+  border: none;
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  text-decoration: none;
+  transition: all var(--transition-fast);
+}
+
+.admin-coming-soon-contact-btn:hover {
+  background: var(--color-primary-dark, #16a34a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(34, 197, 94, 0.3);
+}
+
+.admin-coming-soon-contact-btn:active {
+  transform: scale(0.98);
+}
+
+/* ═════════════════════════════════════════
+   RESPONSIVE
+   ═════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .admin-coming-soon-card {
+    padding: 36px 24px;
+  }
+
+  .admin-coming-soon-title {
+    font-size: var(--text-xl);
+  }
+
+  .admin-coming-soon-subtitle {
+    font-size: var(--text-lg);
+  }
+
+  .admin-coming-soon-page {
+    padding-bottom: calc(var(--mobile-nav-height, 64px) + var(--space-6));
+  }
+}
+
+@media print {
+  .admin-coming-soon-page {
+    display: none !important;
+  }
+}

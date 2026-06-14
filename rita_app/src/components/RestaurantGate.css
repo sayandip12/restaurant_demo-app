@@ -1,0 +1,187 @@
+/* ============================================
+   RITA FOODLAND — Restaurant Gate (Optimized)
+   ============================================ */
+
+/* ---------- Gate Color Tokens ---------- */
+.gate {
+  --color-gate-wood: #2a1810;
+  --color-gate-wood-dark: #1a0f08;
+  --color-gold: #d4af37;
+  --color-gold-dark: #b8941e;
+}
+
+/* ---------- Gate Container ---------- */
+.gate {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-gate);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  perspective: clamp(1000px, 120vw, 2000px);
+  background: #000000;
+  will-change: opacity;
+  transition: opacity 0.5s ease;
+}
+
+.gate--opening {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* ---------- Gate Frame ---------- */
+.gate__frame {
+  position: relative;
+  width: 90vw;
+  height: 90vh;
+  max-width: 1200px;
+  display: flex;
+  border: clamp(10px, 2vw, 20px) solid var(--color-gate-wood-dark);
+  border-radius: 4px;
+  box-shadow:
+    0 0 clamp(20px, 4vw, 50px) rgba(0, 0, 0, 0.8),
+    inset 0 0 0 clamp(2px, 0.5vw, 4px) var(--color-gold);
+  background: #000000;
+  transform-style: preserve-3d;
+  will-change: box-shadow;
+  transition:
+    box-shadow 0.5s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.gate--opening .gate__frame {
+  border-color: transparent;
+  box-shadow: none;
+}
+
+/* ---------- Doors ---------- */
+.gate__door {
+  flex: 1;
+  position: relative;
+  background: linear-gradient(to bottom, var(--color-gate-wood), var(--color-gate-wood-dark));
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transform-style: preserve-3d;
+  will-change: transform, opacity;
+  transition:
+    transform 0.5s cubic-bezier(0.25, 1, 0.3, 1),
+    opacity 0.5s ease;
+}
+
+.gate__door--left {
+  transform-origin: left center;
+  border-right: clamp(1px, 0.2vw, 2px) solid #0a0a0c;
+}
+
+.gate__door--right {
+  transform-origin: right center;
+  border-left: clamp(1px, 0.2vw, 2px) solid #0a0a0c;
+}
+
+.gate--opening .gate__door--left {
+  transform: rotateY(100deg);
+  opacity: 0;
+}
+
+.gate--opening .gate__door--right {
+  transform: rotateY(-100deg);
+  opacity: 0;
+}
+
+/* ---------- Door Panel & Text ---------- */
+.gate__panel {
+  position: absolute;
+  top: 10%;
+  bottom: 10%;
+  left: 10%;
+  right: 10%;
+  border: clamp(2px, 0.4vw, 4px) solid rgba(212, 175, 55, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+  pointer-events: none;
+}
+
+.gate__text {
+  font-family: var(--font-heading), 'Georgia', serif;
+  font-size: var(--text-xl);
+  color: var(--color-gold);
+  letter-spacing: clamp(4px, 1vw, 8px);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* ---------- Door Handles ---------- */
+.gate__handle {
+  position: absolute;
+  top: 50%;
+  width: clamp(60px, 10vw, 100px);
+  height: clamp(120px, 20vw, 200px);
+  background: linear-gradient(135deg, var(--color-gold) 0%, var(--color-gold-dark) 100%);
+  z-index: 10;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  cursor: pointer;
+}
+
+.gate__handle--left {
+  right: 0;
+  transform: translate(50%, -50%);
+  border-radius: clamp(100px, 20vw, 200px) 0 0 clamp(100px, 20vw, 200px);
+  border-right: 2px solid rgba(0, 0, 0, 0.3);
+}
+
+.gate__handle--right {
+  left: 0;
+  transform: translate(-50%, -50%);
+  border-radius: 0 clamp(100px, 20vw, 200px) clamp(100px, 20vw, 200px) 0;
+  border-left: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.gate__handle-inner {
+  width: clamp(40px, 6vw, 60px);
+  height: clamp(80px, 12vw, 120px);
+  border: clamp(2px, 0.4vw, 4px) solid rgba(255, 255, 255, 0.3);
+}
+
+.gate__handle--left .gate__handle-inner {
+  border-radius: clamp(60px, 12vw, 120px) 0 0 clamp(60px, 12vw, 120px);
+  margin-right: -4px;
+}
+
+.gate__handle--right .gate__handle-inner {
+  border-radius: 0 clamp(60px, 12vw, 120px) clamp(60px, 12vw, 120px) 0;
+  margin-left: -4px;
+}
+
+.gate--clickable {
+  cursor: pointer;
+}
+
+.gate__pulse-text {
+  position: absolute;
+  bottom: 5%;
+  left: 50%;
+  transform: translate(-50%, 0);
+  color: var(--color-gold);
+  font-family: var(--font-heading), sans-serif;
+  font-size: var(--text-xl);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  z-index: 20;
+  animation: pulseOpacity 2s infinite ease-in-out;
+  text-shadow: 0 4px 12px rgba(0,0,0,0.9);
+  pointer-events: none;
+}
+
+@keyframes pulseOpacity {
+  0%, 100% { opacity: 0.3; }
+  50% { opacity: 1; }
+}

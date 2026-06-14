@@ -1,0 +1,7 @@
+﻿<svg width="150" height="150" viewBox="0 0 150 150" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="rgb(165, 140, 110)" stroke-width="2" opacity="0.3">
+    <path d="M0 0 L150 0 C 150 75, 75 150, 0 150 Z" />
+    <path d="M0 0 L120 0 C 120 60, 60 120, 0 120 Z" stroke-dasharray="4 4" />
+    <path d="M0 0 L90 0 C 90 45, 45 90, 0 90 Z" />
+  </g>
+</svg>

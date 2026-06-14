@@ -1,0 +1,336 @@
+/* ============================================
+   RITA FOODLAND — Footer Styles
+   ============================================ */
+
+.footer {
+  background: var(--color-bg);
+  border-top: 1px solid var(--gray-200);
+  margin-top: auto;
+}
+
+/* ---------- Main Grid ---------- */
+.footer__container {
+  padding-top: var(--space-12);
+  padding-bottom: var(--space-10);
+}
+
+.footer__grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr 1fr 0.9fr 1.3fr;
+  gap: var(--space-6);
+}
+
+.footer__map-container {
+  width: 100%;
+  border-radius: var(--radius-md, 8px);
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+.footer__map-container iframe {
+  display: block;
+}
+
+/* ---------- Column ---------- */
+.footer__col-title {
+  font-family: var(--font-heading);
+  font-size: var(--text-sm);
+  font-weight: 700;
+  color: var(--gray-900);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: var(--space-4);
+}
+
+/* ---------- Brand / About ---------- */
+.footer__brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: var(--space-4);
+}
+
+.footer__logo-icon {
+  width: 38px;
+  height: 38px;
+  background: var(--color-accent);
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--white);
+  flex-shrink: 0;
+}
+
+.footer__logo-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.footer__logo-name {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  font-size: var(--text-base);
+  color: var(--gray-900);
+  line-height: 1.2;
+}
+
+.footer__logo-tagline {
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  font-weight: 500;
+}
+
+.footer__about-text {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.7;
+}
+
+/* ---------- Quick Links ---------- */
+.footer__nav {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.footer__link {
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+  display: inline-block;
+}
+
+.footer__link:hover {
+  color: var(--color-primary);
+}
+
+/* ---------- Contact ---------- */
+.footer__contact-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.footer__contact-item {
+  display: flex;
+  gap: 10px;
+  font-size: var(--text-sm);
+  color: var(--gray-600);
+  line-height: 1.6;
+}
+
+.footer__contact-item svg {
+  flex-shrink: 0;
+  margin-top: 3px;
+  color: var(--color-primary);
+}
+
+.footer__phones {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.footer__phone {
+  color: var(--gray-600);
+  text-decoration: none;
+  transition: color var(--transition-fast);
+}
+
+.footer__phone:hover {
+  color: var(--color-primary);
+}
+
+/* ---------- Hours ---------- */
+.footer__hours {
+  margin-bottom: var(--space-3);
+}
+
+.footer__hours-row {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.footer__hours-day {
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--gray-700);
+}
+
+.footer__hours-time {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+}
+
+.footer__hours-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 12px;
+  background: var(--green-100);
+  color: var(--green-800);
+  font-size: var(--text-xs);
+  font-weight: 600;
+  border-radius: var(--radius-full);
+}
+
+.footer__hours-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green-500);
+}
+
+/* ---------- Bottom Bar ---------- */
+.footer__bottom {
+  border-top: 1px solid var(--gray-200);
+  padding: var(--space-4) 0;
+}
+
+.footer__bottom-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.footer__copyright {
+  font-size: var(--text-xs);
+  color: var(--gray-400);
+}
+
+.footer__socials {
+  display: flex;
+  gap: 12px;
+}
+
+.footer__social-link {
+  width: 34px;
+  height: 34px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  color: var(--gray-400);
+  transition: color var(--transition-fast), background var(--transition-fast);
+}
+
+.footer__social-link:hover {
+  color: var(--color-primary);
+  background: var(--green-50);
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1024px) {
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-8);
+  }
+  .footer__map-col {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 768px) {
+  .footer {
+    padding-bottom: calc(var(--mobile-nav-height) + 16px);
+  }
+
+  .footer__grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+
+  .footer__col:first-child {
+    grid-column: span 2;
+  }
+
+  .footer__col:last-child {
+    grid-column: span 2;
+  }
+
+  .footer__container {
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+
+  .footer__bottom-inner {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+}
+
+/* Small Mobile */
+@media (max-width: 480px) {
+  .footer__grid {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+  
+  .footer__col:first-child,
+  .footer__col:last-child {
+    grid-column: span 1;
+  }
+}
+
+/* ---------- Dark Brown Theme Overrides ---------- */
+.footer {
+  background-color: #2B140A;
+  border-top: none;
+  position: relative;
+  z-index: 1;
+}
+
+.footer::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url("/gold-mandala.svg");
+  background-repeat: repeat;
+  background-size: 300px;
+  opacity: 0.05;
+  z-index: -1;
+  pointer-events: none;
+}
+
+.footer__col-title { color: #EBE3D3; }
+.footer__logo-name { color: #F5EFE3; }
+.footer__about-text { color: rgba(235, 227, 211, 0.8); }
+.footer__link { color: rgba(235, 227, 211, 0.7); }
+.footer__link:hover { color: var(--color-primary); }
+.footer__contact-item { color: rgba(235, 227, 211, 0.8); }
+.footer__phone { color: #EBE3D3; }
+.footer__phone:hover { color: var(--color-primary); }
+.footer__hours-day { color: #EBE3D3; }
+.footer__hours-time { color: rgba(235, 227, 211, 0.7); }
+.footer__copyright { color: rgba(235, 227, 211, 0.5); }
+.footer__social-link { 
+  color: rgba(235, 227, 211, 0.5); 
+  background: rgba(255, 255, 255, 0.05); 
+}
+.footer__social-link:hover {
+  color: var(--color-primary);
+  background: rgba(255, 255, 255, 0.1);
+}
+.footer__bottom { border-top: 1px solid rgba(255, 255, 255, 0.1); }
+
+/* Privacy Policy link in copyright bar */
+.footer__privacy-link {
+  color: rgba(235, 227, 211, 0.5);
+  text-decoration: none;
+  font-size: var(--text-xs);
+  transition: color var(--transition-fast);
+}
+
+.footer__privacy-link:hover {
+  color: var(--color-primary);
+}
+

@@ -1,0 +1,127 @@
+/* ============================================
+   RITA FOODLAND — Our Specialities Section
+   ============================================ */
+
+.specialities-section {
+  background: var(--color-bg);
+}
+
+/* ---------- Grid ---------- */
+.specialities-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+/* ---------- Special Card (Horizontal) ---------- */
+.special-card {
+  display: flex;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-light);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  transition: box-shadow var(--transition-base), transform var(--transition-base);
+}
+
+.special-card:hover {
+  box-shadow: var(--shadow-lg);
+  transform: translateY(-3px);
+}
+
+/* ---------- Image ---------- */
+.special-card-img-wrapper {
+  flex-shrink: 0;
+  width: 200px;
+  min-height: 200px;
+  overflow: hidden;
+}
+
+.special-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform var(--transition-base);
+}
+
+.special-card:hover .special-card-img {
+  transform: scale(1.05);
+}
+
+/* ---------- Content ---------- */
+.special-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px;
+  flex: 1;
+}
+
+.special-card-name {
+  font-family: var(--font-heading);
+  font-size: var(--text-lg);
+  font-weight: 700;
+  color: var(--gray-900);
+  margin: 0;
+  line-height: 1.3;
+}
+
+.special-card-desc {
+  font-size: var(--text-sm);
+  color: var(--gray-500);
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* ---------- Footer ---------- */
+.special-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 8px;
+}
+
+.special-price-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.special-price {
+  font-family: var(--font-heading);
+  font-size: var(--text-xl);
+  font-weight: 700;
+  color: var(--gray-900);
+}
+
+/* ===========================================
+   RESPONSIVE
+   =========================================== */
+
+@media (max-width: 1024px) {
+  .specialities-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .specialities-grid {
+    gap: 16px;
+  }
+
+  /* Stack vertically on mobile */
+  .special-card {
+    flex-direction: column;
+  }
+
+  .special-card-img-wrapper {
+    width: 100%;
+    height: 180px;
+    min-height: auto;
+  }
+
+  .special-card-content {
+    padding: 16px;
+  }
+}

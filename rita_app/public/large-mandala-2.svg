@@ -1,0 +1,10 @@
+﻿<svg width="600" height="600" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+  <g fill="none" stroke="rgb(165, 140, 110)" stroke-width="2" opacity="0.10">
+    <circle cx="300" cy="300" r="20"/><circle cx="300" cy="300" r="40" stroke-dasharray="4 4"/>
+    <g id="inner2"><path d="M300 260 C 320 180, 340 220, 300 100 C 260 220, 280 180, 300 260" /><path d="M300 340 C 320 420, 340 380, 300 500 C 260 380, 280 420, 300 340" /><path d="M260 300 C 180 320, 220 340, 100 300 C 220 260, 180 280, 260 300" /><path d="M340 300 C 420 320, 380 340, 500 300 C 380 260, 420 280, 340 300" /></g>
+    <g transform="rotate(45 300 300)"><use href="#inner2"/></g>
+    <circle cx="300" cy="300" r="210"/><circle cx="300" cy="300" r="230" stroke-dasharray="10 15" stroke-width="2"/>
+    <g id="outer2"><path d="M300 70 C 315 40, 325 50, 300 10 C 275 50, 285 40, 300 70" /><path d="M300 530 C 315 560, 325 550, 300 590 C 275 550, 285 560, 300 530" /><path d="M70 300 C 40 315, 50 325, 10 300 C 50 275, 40 285, 70 300" /><path d="M530 300 C 560 315, 550 325, 590 300 C 550 275, 560 285, 530 300" /></g>
+    <g transform="rotate(30 300 300)"><use href="#outer2"/></g><g transform="rotate(60 300 300)"><use href="#outer2"/></g>
+  </g>
+</svg>

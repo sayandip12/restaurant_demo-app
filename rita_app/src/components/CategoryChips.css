@@ -1,0 +1,108 @@
+/* ============================================
+   RITA FOODLAND — Category Chips
+   ============================================ */
+
+.category-chips-section {
+  padding: 24px 0;
+}
+
+.chips-wrapper {
+  display: flex;
+  align-items: center;
+  position: relative;
+  gap: 8px;
+}
+
+.chips-scroll-btn {
+  background: var(--color-bg);
+  border: 1px solid var(--color-border-light);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  cursor: pointer;
+  color: var(--gray-600);
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.chips-scroll-btn:hover {
+  color: var(--color-primary);
+  border-color: var(--color-primary);
+  background: var(--color-bg-secondary);
+}
+
+.chips-scroll-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+.chips-scroll-container {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding: 4px 0;
+
+  /* Hide scrollbar */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.chips-scroll-container::-webkit-scrollbar {
+  display: none;
+}
+
+/* ---------- Chip ---------- */
+.category-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 22px;
+  border: 1px solid var(--gray-200);
+  border-radius: var(--radius-full);
+  background: var(--color-bg-secondary);
+  font-size: var(--text-sm);
+  font-weight: 500;
+  color: var(--gray-700);
+  white-space: nowrap;
+  text-decoration: none;
+  scroll-snap-align: start;
+  transition: all var(--transition-fast);
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.category-chip:hover {
+  background: var(--green-50);
+  border-color: var(--green-600);
+  color: var(--green-700);
+  box-shadow: 0 2px 8px rgba(22, 163, 74, 0.1);
+  transform: translateY(-1px);
+}
+
+.chip-name {
+  font-family: var(--font-body);
+  letter-spacing: 0.2px;
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+  .category-chips-section {
+    padding: 16px 0;
+  }
+
+  .chips-scroll-btn {
+    display: none; /* Often unneeded on touch screens, but keeping them flex by default is fine if we want */
+  }
+
+  .category-chip {
+    padding: 8px 18px;
+    font-size: var(--text-xs);
+  }
+}
