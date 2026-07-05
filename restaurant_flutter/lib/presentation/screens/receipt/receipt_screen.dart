@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
@@ -35,74 +35,90 @@ class ReceiptScreen extends ConsumerWidget {
             return const Center(child: Text('Order not found'));
           }
 
-          final receiptText = ReceiptGenerator.generate(order);
-
-          return ListView(
-            padding: const EdgeInsets.all(AppSpacing.s4),
+          return Column(
             children: [
-              Container(
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                  border: Border.all(color: AppColors.border),
-                  boxShadow: [
-                    BoxShadow(
-                      color: AppColors.gray200,
-                      blurRadius: 8,
-                      offset: const Offset(0, 2),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(AppSpacing.s4),
-                  child: Text(
-                    receiptText,
-                    style: const TextStyle(
-                      fontFamily: 'Courier New',
-                      fontSize: 11,
-                      height: 1.4,
-                      color: AppColors.textPrimary,
-                    ),
-                  ),
+              // 1. Receipt Preview
+              Expanded(
+                child: PdfPreview(
+                  build: (format) => ReceiptGenerator.generatePdf(order),
+                  allowPrinting: false,
+                  allowSharing: false,
+                  canChangeOrientation: false,
+                  canChangePageFormat: false,
+                  initialPageFormat: PdfPageFormat.roll80,
                 ),
               ),
-              const SizedBox(height: AppSpacing.s6),
-              Row(
-                children: [
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        final doc = pw.Document();
-                        doc.addPage(pw.Page(
-                          pageFormat: PdfPageFormat.roll80,
-                          build: (_) => pw.Text(
-                            receiptText,
-                            style: pw.TextStyle(
-                              font: pw.Font.courier(),
-                              fontSize: 10,
+              
+              // Action Buttons
+              Container(
+                padding: const EdgeInsets.all(AppSpacing.s4),
+                decoration: BoxDecoration(
+                  color: AppColors.white,
+                  boxShadow: [
+                    BoxShadow(color: AppColors.gray200, blurRadius: 4, offset: const Offset(0, -2))
+                  ]
+                ),
+                child: SafeArea(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) ...[
+                        SizedBox(
+                          width: double.infinity,
+                          child: ElevatedButton.icon(
+                            onPressed: () async {
+                              // Open PDF directly
+                              final url = order.receiptUrl!;
+                              if (await canLaunchUrl(Uri.parse(url))) {
+                                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                              }
+                            },
+                            icon: const Icon(Icons.open_in_new),
+                            label: const Text('View PDF in Browser'),
+                          ),
+                        ),
+                        const SizedBox(height: AppSpacing.s3),
+                      ],
+                      Row(
+                        children: [
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () async {
+                                final bytes = await ReceiptGenerator.generatePdf(order);
+                                await Printing.sharePdf(
+                                  bytes: bytes,
+                                  filename: 'Receipt_${order.id}.pdf',
+                                );
+                              },
+                              icon: const Icon(Icons.download, size: 18),
+                              label: const Text('Download PDF'),
                             ),
                           ),
-                        ));
-                        await Printing.sharePdf(
-                          bytes: await doc.save(),
-                          filename: 'receipt-$orderId.pdf',
-                        );
-                      },
-                      icon: const Icon(Icons.picture_as_pdf_outlined, size: 16),
-                      label: const Text('Save PDF'),
-                    ),
+                          const SizedBox(width: AppSpacing.s3),
+                          Expanded(
+                            child: OutlinedButton.icon(
+                              onPressed: () async {
+                                if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) {
+                                  // Share the public URL
+                                  await Share.share('Here is my order receipt: ${order.receiptUrl}');
+                                } else {
+                                  // Fallback to sharing the PDF file itself
+                                  final bytes = await ReceiptGenerator.generatePdf(order);
+                                  await Printing.sharePdf(
+                                    bytes: bytes,
+                                    filename: 'Receipt_${order.id}.pdf',
+                                  );
+                                }
+                              },
+                              icon: const Icon(Icons.share, size: 18),
+                              label: const Text('Share PDF'),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
                   ),
-                  const SizedBox(width: AppSpacing.s3),
-                  Expanded(
-                    child: OutlinedButton.icon(
-                      onPressed: () async {
-                        await Share.share(receiptText, subject: 'Order Receipt - $orderId');
-                      },
-                      icon: const Icon(Icons.share_outlined, size: 16),
-                      label: const Text('Share Text'),
-                    ),
-                  ),
-                ],
+                ),
               ),
             ],
           );

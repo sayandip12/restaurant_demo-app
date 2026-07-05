@@ -52,7 +52,13 @@ class ContactScreen extends StatelessWidget {
             action: 'Call Now',
             onTap: () async {
               final uri = Uri.parse('tel:+91${AppStrings.phone1}');
-              if (await canLaunchUrl(uri)) launchUrl(uri);
+              try {
+                await launchUrl(uri);
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open dialer')));
+                }
+              }
             },
           ),
           const SizedBox(height: AppSpacing.s3),
@@ -63,8 +69,29 @@ class ContactScreen extends StatelessWidget {
             action: 'Chat Now',
             onTap: () async {
               final uri = Uri.parse(AppStrings.whatsappUrl);
-              if (await canLaunchUrl(uri)) {
-                launchUrl(uri, mode: LaunchMode.externalApplication);
+              try {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open WhatsApp')));
+                }
+              }
+            },
+          ),
+          const SizedBox(height: AppSpacing.s3),
+          _ContactCard(
+            icon: Icons.email_outlined,
+            title: 'Email Us',
+            subtitle: 'info@ritafoodland.com',
+            action: 'Send Email',
+            onTap: () async {
+              final uri = Uri.parse('mailto:info@ritafoodland.com');
+              try {
+                await launchUrl(uri);
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open email client')));
+                }
               }
             },
           ),
@@ -76,8 +103,12 @@ class ContactScreen extends StatelessWidget {
             action: 'Get Directions',
             onTap: () async {
               final uri = Uri.parse('https://maps.google.com/?q=${Uri.encodeComponent("Rita Foodland, J.N. Colony, Kalyani")}');
-              if (await canLaunchUrl(uri)) {
-                launchUrl(uri, mode: LaunchMode.externalApplication);
+              try {
+                await launchUrl(uri, mode: LaunchMode.externalApplication);
+              } catch (_) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Maps')));
+                }
               }
             },
           ),

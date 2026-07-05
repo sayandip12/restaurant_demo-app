@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:pdf/pdf.dart';
-import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -21,7 +20,6 @@ class ConfirmationView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final receiptText = ReceiptGenerator.generate(order);
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.s4),
@@ -96,6 +94,7 @@ class ConfirmationView extends StatelessWidget {
 
         // Thermal receipt
         Container(
+          height: 400,
           decoration: BoxDecoration(
             color: AppColors.white,
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
@@ -108,45 +107,23 @@ class ConfirmationView extends StatelessWidget {
               ),
             ],
           ),
-          child: Column(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(AppSpacing.s3),
-                decoration: const BoxDecoration(
-                  color: AppColors.backgroundSecondary,
-                  borderRadius: BorderRadius.vertical(
-                      top: Radius.circular(AppSpacing.radiusMd)),
-                ),
-                child: Row(
-                  children: const [
-                    Icon(Icons.receipt, size: 16, color: AppColors.primary),
-                    SizedBox(width: 8),
-                    Text('Order Receipt',
-                        style: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 13)),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(AppSpacing.s3),
-                child: Text(
-                  receiptText,
-                  style: const TextStyle(
-                    fontFamily: 'Courier New',
-                    fontSize: 11,
-                    height: 1.4,
-                    color: AppColors.textPrimary,
-                  ),
-                ),
-              ),
-            ],
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+            child: PdfPreview(
+              build: (format) => ReceiptGenerator.generatePdf(order),
+              allowPrinting: false,
+              allowSharing: false,
+              canChangeOrientation: false,
+              canChangePageFormat: false,
+              initialPageFormat: PdfPageFormat.roll80,
+            ),
           ),
         ).animate().fadeIn(delay: 300.ms),
 
         const SizedBox(height: AppSpacing.s4),
 
         // Action buttons
-        _ActionButtons(order: order, receiptText: receiptText),
+        _ActionButtons(order: order),
         const SizedBox(height: AppSpacing.s4),
 
         // New order button
@@ -166,57 +143,44 @@ class ConfirmationView extends StatelessWidget {
 
 class _ActionButtons extends StatelessWidget {
   final Order order;
-  final String receiptText;
 
-  const _ActionButtons({required this.order, required this.receiptText});
+  const _ActionButtons({required this.order});
 
   Future<void> _sendWhatsApp(BuildContext context) async {
-    final message = ReceiptGenerator.buildWhatsAppMessage(order);
-    final encoded = Uri.encodeComponent(message);
+    final msg = '🛒 *NEW ORDER*\n\n'
+        'Order: ${order.id}\n'
+        'Customer: ${order.customerName}\n'
+        'Phone: ${order.phone}\n'
+        'Amount: ₹${order.total}\n\n'
+        'Receipt PDF:\n${order.receiptUrl ?? ''}\n\n'
+        'Open PDF and print.';
+    final encoded = Uri.encodeComponent(msg);
     final url = 'https://wa.me/917003764902?text=$encoded';
     final uri = Uri.parse(url);
-    if (await canLaunchUrl(uri)) {
-      launchUrl(uri, mode: LaunchMode.externalApplication);
+    try {
+      await launchUrl(uri, mode: LaunchMode.externalApplication);
+    } catch (e) {
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Could not open WhatsApp: $e')),
+        );
+      }
     }
-  }
-
-  Future<void> _sharePdf() async {
-    final doc = pw.Document();
-    doc.addPage(pw.Page(
-      pageFormat: PdfPageFormat.roll80,
-      build: (_) => pw.Text(
-        receiptText,
-        style: pw.TextStyle(
-          font: pw.Font.courier(),
-          fontSize: 10,
-        ),
-      ),
-    ));
-    await Printing.sharePdf(
-      bytes: await doc.save(),
-      filename: 'receipt-${order.id}.pdf',
-    );
-  }
-
-  Future<void> _shareReceipt() async {
-    await Share.share(receiptText, subject: 'Order Receipt - ${order.id}');
   }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        // WhatsApp button
         SizedBox(
           width: double.infinity,
           child: ElevatedButton.icon(
             onPressed: () => _sendWhatsApp(context),
-            icon: const Icon(Icons.chat),
+            icon: const Icon(Icons.send),
             label: const Text('Send Order via WhatsApp'),
             style: ElevatedButton.styleFrom(
               backgroundColor: const Color(0xFF25D366),
-              padding: const EdgeInsets.symmetric(vertical: AppSpacing.s4),
-              textStyle: const TextStyle(fontSize: 15, fontWeight: FontWeight.w700),
+              foregroundColor: Colors.white,
             ),
           ),
         ),
@@ -225,7 +189,13 @@ class _ActionButtons extends StatelessWidget {
           children: [
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: _sharePdf,
+                onPressed: () async {
+                  final bytes = await ReceiptGenerator.generatePdf(order);
+                  await Printing.sharePdf(
+                    bytes: bytes,
+                    filename: 'receipt-${order.id}.pdf',
+                  );
+                },
                 icon: const Icon(Icons.picture_as_pdf_outlined, size: 16),
                 label: const Text('Save PDF'),
               ),
@@ -233,9 +203,19 @@ class _ActionButtons extends StatelessWidget {
             const SizedBox(width: AppSpacing.s3),
             Expanded(
               child: OutlinedButton.icon(
-                onPressed: _shareReceipt,
+                onPressed: () async {
+                  if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) {
+                    await Share.share('Here is my order receipt: ${order.receiptUrl}');
+                  } else {
+                    final bytes = await ReceiptGenerator.generatePdf(order);
+                    await Printing.sharePdf(
+                      bytes: bytes,
+                      filename: 'receipt-${order.id}.pdf',
+                    );
+                  }
+                },
                 icon: const Icon(Icons.share_outlined, size: 16),
-                label: const Text('Share'),
+                label: const Text('Share PDF'),
               ),
             ),
           ],

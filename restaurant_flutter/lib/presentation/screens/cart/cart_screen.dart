@@ -11,6 +11,7 @@ import 'widgets/price_summary_card.dart';
 import 'widgets/step_indicator.dart';
 import 'widgets/checkout_form.dart';
 import 'widgets/confirmation_view.dart';
+import '../../providers/address_provider.dart';
 
 /// Cart screen — 3-step wizard: Cart → Checkout → Confirmation
 /// Matches CartPage.jsx logic exactly
@@ -24,11 +25,19 @@ class CartScreen extends ConsumerStatefulWidget {
 class _CartScreenState extends ConsumerState<CartScreen> {
   int _step = 0; // 0=Cart, 1=Checkout, 2=Confirmation
 
+  bool _isRestaurantOpen() {
+    final now = DateTime.now();
+    final h = now.hour;
+    // Open from 11:00 AM (hour 11) to 1:00 AM (hour 0)
+    return (h >= 11 || h == 0);
+  }
+
   // Checkout form state
   final _formKey = GlobalKey<FormState>();
   final _nameCtrl = TextEditingController();
   final _phoneCtrl = TextEditingController();
   final _addressCtrl = TextEditingController();
+  final _pincodeCtrl = TextEditingController();
   final _landmarkCtrl = TextEditingController();
   final _notesCtrl = TextEditingController();
   bool _isSubmitting = false;
@@ -38,6 +47,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     _nameCtrl.dispose();
     _phoneCtrl.dispose();
     _addressCtrl.dispose();
+    _pincodeCtrl.dispose();
     _landmarkCtrl.dispose();
     _notesCtrl.dispose();
     super.dispose();
@@ -53,6 +63,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           customerName: _nameCtrl.text.trim(),
           phone: _phoneCtrl.text.trim(),
           address: _addressCtrl.text.trim(),
+          pincode: _pincodeCtrl.text.trim(),
           landmark: _landmarkCtrl.text.trim(),
           notes: _notesCtrl.text.trim(),
         );
@@ -69,10 +80,23 @@ class _CartScreenState extends ConsumerState<CartScreen> {
     }
   }
 
+  void _prefillAddress() {
+    final addresses = ref.read(savedAddressesProvider);
+    if (addresses.isNotEmpty) {
+      final addr = addresses.first;
+      if (_nameCtrl.text.isEmpty) _nameCtrl.text = addr['name'] ?? '';
+      if (_phoneCtrl.text.isEmpty) _phoneCtrl.text = addr['phone'] ?? '';
+      if (_addressCtrl.text.isEmpty) _addressCtrl.text = addr['address'] ?? '';
+      if (_pincodeCtrl.text.isEmpty) _pincodeCtrl.text = addr['pincode'] ?? '';
+      if (_landmarkCtrl.text.isEmpty) _landmarkCtrl.text = addr['landmark'] ?? '';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final cartState = ref.watch(cartProvider);
     final orderState = ref.watch(orderProvider);
+    final addresses = ref.watch(savedAddressesProvider);
 
     return Scaffold(
       backgroundColor: AppColors.background,
@@ -104,20 +128,30 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           if (cartState.items.isEmpty) return _EmptyCart();
           return _CartStep(
             cartState: cartState,
-            onProceed: () => setState(() => _step = 1),
+            onProceed: () {
+              _prefillAddress();
+              setState(() => _step = 1);
+            },
           );
         }
         if (_step == 1) {
+          print('DEBUG [CartScreen]: step == 1. addresses watched from provider: ${addresses.length}');
           return _CheckoutStep(
             formKey: _formKey,
             nameCtrl: _nameCtrl,
             phoneCtrl: _phoneCtrl,
             addressCtrl: _addressCtrl,
+            pincodeCtrl: _pincodeCtrl,
             landmarkCtrl: _landmarkCtrl,
             notesCtrl: _notesCtrl,
             cartState: cartState,
             isSubmitting: _isSubmitting,
+            addresses: addresses,
             onSubmit: _placeOrder,
+            // TODO: Re-enable restaurant hours before production launch
+            // Open: 11:00 AM
+            // Close: 1:00 AM
+            isOpen: true, // _isRestaurantOpen(),
           );
         }
         // Step 2 — confirmation
@@ -193,22 +227,28 @@ class _CheckoutStep extends StatelessWidget {
   final TextEditingController nameCtrl;
   final TextEditingController phoneCtrl;
   final TextEditingController addressCtrl;
+  final TextEditingController pincodeCtrl;
   final TextEditingController landmarkCtrl;
   final TextEditingController notesCtrl;
   final CartState cartState;
   final bool isSubmitting;
+  final List<Map<String, dynamic>> addresses;
   final VoidCallback onSubmit;
+  final bool isOpen;
 
   const _CheckoutStep({
     required this.formKey,
     required this.nameCtrl,
     required this.phoneCtrl,
     required this.addressCtrl,
+    required this.pincodeCtrl,
     required this.landmarkCtrl,
     required this.notesCtrl,
     required this.cartState,
     required this.isSubmitting,
+    required this.addresses,
     required this.onSubmit,
+    required this.isOpen,
   });
 
   @override
@@ -224,18 +264,42 @@ class _CheckoutStep extends StatelessWidget {
                 nameCtrl: nameCtrl,
                 phoneCtrl: phoneCtrl,
                 addressCtrl: addressCtrl,
+                pincodeCtrl: pincodeCtrl,
                 landmarkCtrl: landmarkCtrl,
                 notesCtrl: notesCtrl,
+                addresses: addresses,
               ),
               const SizedBox(height: AppSpacing.s4),
               PriceSummaryCard(cartState: cartState),
             ],
           ),
         ),
+        if (!isOpen)
+          Container(
+            padding: const EdgeInsets.all(AppSpacing.s4),
+            margin: const EdgeInsets.all(AppSpacing.s4),
+            decoration: BoxDecoration(
+              color: AppColors.dangerLight,
+              borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+              border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
+            ),
+            child: const Row(
+              children: [
+                Icon(Icons.access_time, color: AppColors.danger),
+                SizedBox(width: AppSpacing.s3),
+                Expanded(
+                  child: Text(
+                    'Restaurant is currently closed.\nOrders are accepted from 11:00 AM to 1:00 AM.',
+                    style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
         _ProceedButton(
           label: isSubmitting ? 'Placing Order...' : 'Place Order',
           total: cartState.grandTotal,
-          onTap: isSubmitting ? null : onSubmit,
+          onTap: (isSubmitting || !isOpen) ? null : onSubmit,
           loading: isSubmitting,
         ),
       ],

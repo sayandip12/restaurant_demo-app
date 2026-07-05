@@ -7,6 +7,7 @@ class Order {
   final String customerName;
   final String phone;
   final String address;
+  final String pincode;
   final String landmark;
   final String notes;
   final List<CartItem> items;
@@ -14,12 +15,14 @@ class Order {
   final int total;
   final String status;
   final DateTime createdAt;
+  final String? receiptUrl;
 
   const Order({
     required this.id,
     required this.customerName,
     required this.phone,
     required this.address,
+    required this.pincode,
     required this.landmark,
     required this.notes,
     required this.items,
@@ -27,6 +30,7 @@ class Order {
     required this.total,
     required this.status,
     required this.createdAt,
+    this.receiptUrl,
   });
 
   Map<String, dynamic> toJson() => {
@@ -34,6 +38,7 @@ class Order {
         'customer_name': customerName,
         'phone': phone,
         'address': address,
+        'pincode': pincode,
         'landmark': landmark,
         'notes': notes,
         'items': items.map((e) => e.toJson()).toList(),
@@ -41,6 +46,7 @@ class Order {
         'total': total,
         'status': status,
         'created_at': createdAt.toIso8601String(),
+        if (receiptUrl != null) 'receipt_url': receiptUrl,
       };
 
   factory Order.fromSupabase(Map<String, dynamic> row) => Order(
@@ -48,6 +54,7 @@ class Order {
         customerName: row['customer_name'] as String,
         phone: row['phone'] as String,
         address: row['address'] as String,
+        pincode: (row['pincode'] as String?) ?? '',
         landmark: (row['landmark'] as String?) ?? '',
         notes: (row['notes'] as String?) ?? '',
         items: ((row['items'] as List?) ?? [])
@@ -56,7 +63,8 @@ class Order {
         subtotal: _parseInt(row['subtotal']),
         total: _parseInt(row['total']),
         status: row['status'] as String,
-        createdAt: DateTime.parse(row['created_at'] as String),
+        createdAt: DateTime.parse(row['created_at'] as String).toUtc(),
+        receiptUrl: row['receipt_url'] as String?,
       );
 
   static int _parseInt(dynamic val) {

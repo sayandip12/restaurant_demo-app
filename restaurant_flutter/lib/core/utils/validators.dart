@@ -30,6 +30,16 @@ class AppValidators {
     }
     return null;
   }
+
+  /// Pincode: required, exactly 6 digits
+  static String? validatePincode(String? value) {
+    final v = value?.trim() ?? '';
+    if (v.isEmpty) return 'Pincode is required';
+    if (!RegExp(r'^\d{6}$').hasMatch(v)) {
+      return 'Pincode must be exactly 6 digits';
+    }
+    return null;
+  }
 }
 
 /// Currency formatting

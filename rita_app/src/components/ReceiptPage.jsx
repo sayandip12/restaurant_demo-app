@@ -216,10 +216,31 @@ function ReceiptPage() {
   }
 
   /* ────── RECEIPT VIEW ────── */
-  const receiptText = generateReceipt(order);
+  let receiptText = '';
+  let renderError = null;
+  try {
+    receiptText = generateReceipt(order);
+  } catch (err) {
+    renderError = err.message;
+  }
+
+  // Debug UI requested by user
+  const debugUI = (
+    <div style={{ padding: '20px', background: '#fee', color: '#c00', margin: '20px', borderRadius: '8px', fontFamily: 'monospace' }}>
+      <h3>Debug Info:</h3>
+      <p>Order ID: {orderId}</p>
+      <p>Rows Found: {order ? 1 : 0}</p>
+      <p>Error: {error || renderError || 'None'}</p>
+      <details>
+        <summary>Raw Order Data</summary>
+        <pre>{JSON.stringify(order, null, 2)}</pre>
+      </details>
+    </div>
+  );
 
   return (
     <div className="receipt-page" id="receipt-page">
+      {debugUI}
       <div className="receipt-page-container">
         {/* Header */}
         <div className="receipt-page-header" id="receipt-page-header">

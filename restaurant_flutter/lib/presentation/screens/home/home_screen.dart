@@ -186,6 +186,14 @@ class _HeroSlider extends StatelessWidget {
                     child: const Icon(Icons.restaurant, size: 60, color: AppColors.border),
                   ),
                 ),
+                // Mandala animation
+                Positioned(
+                  right: -40,
+                  top: -40,
+                  child: const Icon(Icons.filter_vintage, size: 220, color: Colors.white10)
+                      .animate(onPlay: (ctrl) => ctrl.repeat())
+                      .rotate(duration: const Duration(seconds: 20)),
+                ),
                 // Gradient overlay
                 Container(
                   decoration: const BoxDecoration(

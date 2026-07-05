@@ -58,6 +58,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   intl: ^0.20.2
   flutter_native_splash: ^2.4.7
+  path_provider: ^2.1.6
 
 dev_dependencies:
   flutter_test:
@@ -83,5 +84,12 @@ flutter:
   assets:
     - assets/images/
     - assets/images/food/
+    - assets/fonts/
     - .env
 
+  fonts:
+    - family: NotoSans
+      fonts:
+        - asset: assets/fonts/NotoSans-Regular.ttf
+        - asset: assets/fonts/NotoSans-Bold.ttf
+          weight: 700
