@@ -52,8 +52,12 @@ class CartNotifier extends StateNotifier<CartState> {
     } catch (_) {}
   }
 
-  void addItem(MenuItem item, {int quantity = 1}) {
-    final existing = state.items.indexWhere((i) => i.id == item.id);
+  void addItem(MenuItem item, {int quantity = 1, String? customId, String? customName, int? customPrice}) {
+    final targetId = customId ?? item.id;
+    final targetName = customName ?? item.name;
+    final targetPrice = customPrice ?? item.price;
+
+    final existing = state.items.indexWhere((i) => i.id == targetId);
     List<CartItem> updated;
     if (existing >= 0) {
       updated = [...state.items];
@@ -63,9 +67,9 @@ class CartNotifier extends StateNotifier<CartState> {
       updated = [
         ...state.items,
         CartItem(
-          id: item.id,
-          name: item.name,
-          price: item.price,
+          id: targetId,
+          name: targetName,
+          price: targetPrice,
           image: item.image,
           isAsset: item.isAsset,
           quantity: quantity,

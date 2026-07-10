@@ -2,14 +2,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:url_launcher/url_launcher.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import '../../../core/constants/app_strings.dart';
-import 'widgets/popular_dishes_section.dart';
-import 'widgets/specialities_section.dart';
-import 'widgets/reviews_section.dart';
+import 'widgets/circular_popular_carousel.dart';
 import '../../widgets/shared/shared_widgets.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,128 +17,48 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  final _pageController = PageController();
-  int _currentHero = 0;
-  Timer? _heroTimer;
-
-  static const _heroImages = [
-    'assets/images/hero_restaurant_new.jpg',
-    'assets/images/food/biryani.png',
-    'assets/images/food/tandoori_chicken.png',
-  ];
-
-  static const _heroTitles = [
-    'Enjoy Your\nFoodie Mood',
-    'Authentic\nBiryani',
-    'Tandoori\nDelights',
-  ];
-
-  @override
-  void initState() {
-    super.initState();
-    _heroTimer = Timer.periodic(const Duration(seconds: 4), (_) {
-      final next = (_currentHero + 1) % _heroImages.length;
-      _pageController.animateToPage(
-        next,
-        duration: const Duration(milliseconds: 600),
-        curve: Curves.easeInOut,
-      );
-    });
-  }
-
-  @override
-  void dispose() {
-    _heroTimer?.cancel();
-    _pageController.dispose();
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.background,
-      floatingActionButton: WhatsAppFab(onTap: () async {
-        final uri = Uri.parse(AppStrings.whatsappUrl);
-        if (await canLaunchUrl(uri)) launchUrl(uri, mode: LaunchMode.externalApplication);
-      }),
-      body: CustomScrollView(
-        slivers: [
-          // Collapsible app bar
-          SliverAppBar(
-            floating: true,
-            snap: true,
-            backgroundColor: AppColors.background,
-            elevation: 0,
-            scrolledUnderElevation: 2,
-            leading: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Image.asset('assets/images/logo.png', fit: BoxFit.contain),
-            ),
-            title: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text('Rita Foodland',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w800,
-                        )),
-                Text('AUTHENTIC CUISINE',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AppColors.accent,
-                          letterSpacing: 1.5,
-                          fontSize: 9,
-                        )),
-              ],
-            ),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.local_offer_outlined, color: AppColors.textPrimary),
-                tooltip: 'Offers',
-                onPressed: () => context.push('/offers'),
+      backgroundColor: const Color(0xFFFDFBF7), // Cream background as per reference
+      body: Stack(
+        children: [
+          // Background Kolkata image
+          Positioned(
+            top: 100,
+            left: 0,
+            right: 0,
+            child: Opacity(
+              opacity: 0.08,
+              child: Image.asset(
+                'assets/images/hero/kolkata_bg.png',
+                fit: BoxFit.cover,
               ),
-              IconButton(
-                icon: const Icon(Icons.headset_mic_outlined, color: AppColors.textPrimary),
-                tooltip: 'Contact',
-                onPressed: () => context.push('/contact'),
-              ),
-            ],
+            ),
           ),
-
-          SliverToBoxAdapter(
-            child: Column(
-              children: [
-                // Hero Slider
-                _HeroSlider(
-                  pageController: _pageController,
-                  currentIndex: _currentHero,
-                  images: _heroImages,
-                  titles: _heroTitles,
-                  onPageChanged: (i) => setState(() => _currentHero = i),
+          
+          SafeArea(
+            child: CustomScrollView(
+              slivers: [
+                _buildAppBar(context),
+                SliverToBoxAdapter(
+                  child: Column(
+                    children: [
+                      _buildStatusBar(),
+                      const SizedBox(height: AppSpacing.s4),
+                      _buildHeroSection(context),
+                      const SizedBox(height: AppSpacing.s4),
+                      _FeatureCardsStrip(),
+                      const SizedBox(height: AppSpacing.s8),
+                      const CircularPopularCarousel(),
+                      const SizedBox(height: AppSpacing.s8),
+                      _buildFreeDeliveryBanner(),
+                      const SizedBox(height: AppSpacing.s8),
+                      _FooterInfoStrip(),
+                      const SizedBox(height: AppSpacing.s8),
+                    ],
+                  ),
                 ),
-                // Feature cards strip
-                _FeatureCardsStrip(),
-                const SizedBox(height: AppSpacing.s8),
-                // Popular Dishes
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.s4),
-                  child: PopularDishesSection(),
-                ),
-                const SizedBox(height: AppSpacing.s8),
-                // Our Specialities
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.s4),
-                  child: SpecialitiesSection(),
-                ),
-                const SizedBox(height: AppSpacing.s8),
-                // Reviews
-                const Padding(
-                  padding: EdgeInsets.symmetric(horizontal: AppSpacing.s4),
-                  child: ReviewsSection(),
-                ),
-                const SizedBox(height: AppSpacing.s16),
-                // Footer info strip
-                _FooterInfoStrip(),
-                const SizedBox(height: AppSpacing.s8),
               ],
             ),
           ),
@@ -148,121 +66,286 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
-}
 
-class _HeroSlider extends StatelessWidget {
-  final PageController pageController;
-  final int currentIndex;
-  final List<String> images;
-  final List<String> titles;
-  final ValueChanged<int> onPageChanged;
-
-  const _HeroSlider({
-    required this.pageController,
-    required this.currentIndex,
-    required this.images,
-    required this.titles,
-    required this.onPageChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      height: 260,
-      child: Stack(
+  Widget _buildAppBar(BuildContext context) {
+    return SliverAppBar(
+      floating: true,
+      snap: true,
+      backgroundColor: Colors.transparent,
+      elevation: 0,
+      scrolledUnderElevation: 0,
+      leading: IconButton(
+        icon: const Icon(Icons.menu, color: Colors.black, size: 28),
+        onPressed: () {},
+      ),
+      title: Row(
         children: [
-          PageView.builder(
-            controller: pageController,
-            onPageChanged: onPageChanged,
-            itemCount: images.length,
-            itemBuilder: (_, i) => Stack(
-              fit: StackFit.expand,
+          Image.asset('assets/images/logo.png', height: 32, fit: BoxFit.contain),
+          const SizedBox(width: 8),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const Text(
+                'Rita Foodland',
+                style: TextStyle(
+                  color: AppColors.primary,
+                  fontWeight: FontWeight.w800,
+                  fontSize: 18,
+                ),
+              ),
+              Text(
+                'AUTHENTIC CUISINE',
+                style: TextStyle(
+                  color: AppColors.accent.withOpacity(0.9),
+                  letterSpacing: 1.5,
+                  fontSize: 8,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      actions: [
+        IconButton(
+          icon: const Icon(Icons.security_outlined, color: Colors.black87),
+          onPressed: () {},
+        ),
+        Stack(
+          alignment: Alignment.center,
+          children: [
+            IconButton(
+              icon: const Icon(Icons.notifications_none, color: Colors.black87),
+              onPressed: () {},
+            ),
+            Positioned(
+              right: 12,
+              top: 12,
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: const BoxDecoration(
+                  color: AppColors.accent,
+                  shape: BoxShape.circle,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildStatusBar() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
+      padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(30),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Row(
+            children: [
+              Container(width: 8, height: 8, decoration: const BoxDecoration(color: AppColors.primary, shape: BoxShape.circle)),
+              const SizedBox(width: 6),
+              const Text('Open Now', style: TextStyle(color: AppColors.primary, fontSize: 12, fontWeight: FontWeight.w600)),
+            ],
+          ),
+          Row(
+            children: const [
+              Icon(Icons.schedule, size: 14, color: Colors.black54),
+              SizedBox(width: 4),
+              Text('09:00 AM - 11:00 PM', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w500)),
+            ],
+          ),
+          Row(
+            children: [
+              Icon(Icons.moped_outlined, size: 16, color: Colors.black87),
+              const SizedBox(width: 4),
+              const Text('30-40 mins', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w500)),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildHeroSection(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          // Left Text Area
+          Expanded(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
+                const SizedBox(height: 10),
                 Image.asset(
-                  images[i],
-                  fit: BoxFit.cover,
-                  errorBuilder: (_, __, ___) => Container(
-                    color: AppColors.backgroundTertiary,
-                    child: const Icon(Icons.restaurant, size: 60, color: AppColors.border),
+                  'assets/images/logo.png', // Using the uploaded typography/logo as an image to ensure exact match
+                  height: 90,
+                  alignment: Alignment.centerLeft,
+                ),
+                const SizedBox(height: 12),
+                const Text(
+                  'AUTHENTIC CUISINE',
+                  style: TextStyle(
+                    color: AppColors.accent,
+                    letterSpacing: 2,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                // Mandala animation
-                Positioned(
-                  right: -40,
-                  top: -40,
-                  child: const Icon(Icons.filter_vintage, size: 220, color: Colors.white10)
-                      .animate(onPlay: (ctrl) => ctrl.repeat())
-                      .rotate(duration: const Duration(seconds: 20)),
-                ),
-                // Gradient overlay
-                Container(
-                  decoration: const BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.centerLeft,
-                      end: Alignment.centerRight,
-                      colors: [
-                        Color(0xCC000000),
-                        Color(0x44000000),
-                        Colors.transparent,
-                      ],
-                    ),
+                const SizedBox(height: 12),
+                const Text(
+                  'Enjoy the best flavours\ncrafted with love and\nauthentic ingredients.',
+                  style: TextStyle(
+                    color: Colors.black87,
+                    fontSize: 13,
+                    height: 1.4,
                   ),
                 ),
-                // Text overlay
-                Positioned(
-                  left: AppSpacing.s6,
-                  bottom: AppSpacing.s8,
-                  right: AppSpacing.s6,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+                const SizedBox(height: 16),
+                ElevatedButton(
+                  onPressed: () => context.push('/menu'),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: AppColors.primary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                    elevation: 0,
+                  ),
+                  child: const Row(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        titles[i],
-                        style: const TextStyle(
-                          fontFamily: 'Outfit',
-                          fontSize: 28,
-                          fontWeight: FontWeight.w800,
-                          color: Colors.white,
-                          height: 1.2,
-                        ),
-                      ).animate(key: ValueKey(i)).fadeIn(duration: 400.ms).slideX(begin: -0.1),
-                      const SizedBox(height: AppSpacing.s3),
-                      ElevatedButton(
-                        onPressed: () => GoRouter.of(context).go('/menu'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: AppColors.accent,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: AppSpacing.s5, vertical: AppSpacing.s2),
-                          minimumSize: Size.zero,
-                          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                        ),
-                        child: const Text('Order Now', style: TextStyle(fontSize: 13)),
-                      ),
+                      Text('Order Now', style: TextStyle(fontSize: 14, fontWeight: FontWeight.w600, color: Colors.white)),
+                      SizedBox(width: 8),
+                      Icon(Icons.arrow_forward_ios, size: 12, color: Colors.white),
                     ],
                   ),
                 ),
               ],
             ),
           ),
-          // Dot indicators
-          Positioned(
-            bottom: AppSpacing.s3,
-            right: AppSpacing.s4,
-            child: Row(
-              children: List.generate(
-                images.length,
-                (i) => AnimatedContainer(
-                  duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.only(left: 4),
-                  width: currentIndex == i ? 18 : 6,
-                  height: 6,
-                  decoration: BoxDecoration(
-                    color: currentIndex == i ? AppColors.accent : Colors.white54,
-                    borderRadius: BorderRadius.circular(3),
+          
+          // Right Imagery Area
+          Expanded(
+            flex: 6,
+            child: SizedBox(
+              height: 280,
+              child: Stack(
+                clipBehavior: Clip.none,
+                children: [
+                  // Chef image (center-right)
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    child: Image.asset(
+                      'assets/images/hero/chef.png',
+                      height: 230,
+                      fit: BoxFit.contain,
+                    ),
                   ),
-                ),
+                  // Chicken rice top plate
+                  Positioned(
+                    top: -10,
+                    right: 10,
+                    child: Image.asset(
+                      'assets/images/hero/chicken_rice.png',
+                      height: 110,
+                      fit: BoxFit.contain,
+                    ),
+                  ),
+                  // Onion decoration
+                  Positioned(
+                    top: 20,
+                    left: 20,
+                    child: Image.asset(
+                      'assets/images/hero/onion.png',
+                      height: 45,
+                      fit: BoxFit.contain,
+                    ).animate(onPlay: (ctrl) => ctrl.repeat(reverse: true)).scale(begin: const Offset(1, 1), end: const Offset(1.1, 1.1), duration: 2.seconds),
+                  ),
+                  // Badge (bottom right)
+                  Positioned(
+                    bottom: 20,
+                    right: -10,
+                    child: Container(
+                      width: 75,
+                      height: 75,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFFF3E7D3),
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2),
+                        boxShadow: [
+                          BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 10, offset: const Offset(0, 5)),
+                        ],
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          const Text(
+                            "KOLKATA'S\nFAVOURITE",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 7, fontWeight: FontWeight.bold, color: Color(0xFF4A3424), height: 1.1),
+                          ),
+                          const Text(
+                            "FOOD DESTINATION",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 5, color: Color(0xFF4A3424)),
+                          ),
+                          const SizedBox(height: 2),
+                          const Icon(Icons.favorite, size: 10, color: Color(0xFF4A3424)),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFreeDeliveryBanner() {
+    return Container(
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+      decoration: BoxDecoration(
+        color: const Color(0xFFE8F3EA), // Soft green background
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          // Scooter left
+          const Icon(Icons.moped, color: AppColors.primary, size: 40),
+          // Text center
+          Column(
+            children: const [
+              Text('FREE DELIVERY', style: TextStyle(color: AppColors.primary, fontWeight: FontWeight.w800, fontSize: 16)),
+              SizedBox(height: 2),
+              Text('On orders above ₹199', style: TextStyle(color: Colors.black87, fontSize: 12)),
+            ],
+          ),
+          // Scooter right (flipped)
+          Transform.flip(
+            flipX: true,
+            child: const Icon(Icons.moped, color: AppColors.primary, size: 40),
           ),
         ],
       ),
@@ -272,56 +355,67 @@ class _HeroSlider extends StatelessWidget {
 
 class _FeatureCardsStrip extends StatelessWidget {
   static const _features = [
-    _FeatureData('🕐', 'Fast Delivery', '30-45 min'),
-    _FeatureData('⭐', 'Top Rated', '4.5+ Stars'),
-    _FeatureData('🌿', 'Fresh Made', 'Daily Fresh'),
-    _FeatureData('💰', 'Best Price', 'Fair Value'),
+    _FeatureData(Icons.schedule, 'Fast\nDelivery', '30-40 mins', Colors.blueAccent),
+    _FeatureData(Icons.star, 'Top Rated', '4.8+ Stars', Colors.amber),
+    _FeatureData(Icons.eco, 'Fresh Ingredients', 'Daily Fresh', Colors.green),
+    _FeatureData(Icons.monetization_on, 'Best Price', 'Fair Value', Colors.orange),
   ];
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.symmetric(vertical: AppSpacing.s4, horizontal: AppSpacing.s4),
+      margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
       child: Row(
         children: _features
             .map((f) => Expanded(
                   child: Container(
-                    margin: const EdgeInsets.only(right: AppSpacing.s2),
-                    padding: const EdgeInsets.symmetric(
-                        vertical: AppSpacing.s3, horizontal: AppSpacing.s2),
+                    margin: const EdgeInsets.only(right: 6),
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 4),
                     decoration: BoxDecoration(
-                      color: AppColors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                      border: Border.all(color: AppColors.borderLight),
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(12),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.04),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
                     ),
                     child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(f.emoji, style: const TextStyle(fontSize: 20)),
+                        Icon(f.icon, color: f.color, size: 24),
+                        const SizedBox(height: 8),
+                        Text(
+                          f.title,
+                          style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 9, color: Colors.black87),
+                          textAlign: TextAlign.center,
+                          maxLines: 2,
+                        ),
                         const SizedBox(height: 4),
-                        Text(f.title,
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 10,
-                                ),
-                            textAlign: TextAlign.center),
-                        Text(f.subtitle,
-                            style: Theme.of(context).textTheme.labelSmall?.copyWith(fontSize: 9),
-                            textAlign: TextAlign.center),
+                        Text(
+                          f.subtitle,
+                          style: const TextStyle(fontSize: 8, color: Colors.black54),
+                          textAlign: TextAlign.center,
+                          maxLines: 1,
+                        ),
                       ],
                     ),
                   ),
                 ))
             .toList(),
       ),
-    ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.1);
+    );
   }
 }
 
 class _FeatureData {
-  final String emoji;
+  final IconData icon;
   final String title;
   final String subtitle;
-  const _FeatureData(this.emoji, this.title, this.subtitle);
+  final Color color;
+  const _FeatureData(this.icon, this.title, this.subtitle, this.color);
 }
 
 class _FooterInfoStrip extends StatelessWidget {
@@ -329,34 +423,33 @@ class _FooterInfoStrip extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
-      padding: const EdgeInsets.all(AppSpacing.s4),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.backgroundSecondary,
-        borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
-        border: Border.all(color: AppColors.borderLight),
+        color: const Color(0xFFFAF3E6), // Soft warm tone matching the bottom of screenshot
+        borderRadius: BorderRadius.circular(20),
       ),
       child: Column(
         children: [
           Row(
             children: const [
-              Icon(Icons.location_on_outlined, color: AppColors.primary, size: 16),
+              Icon(Icons.location_on_outlined, color: Colors.black87, size: 16),
               SizedBox(width: 8),
               Expanded(
-                child: Text(AppStrings.address,
-                    style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+                child: Text('J.N. Ghosh, Kalyani, Nadia',
+                    style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600)),
               ),
             ],
           ),
-          const SizedBox(height: AppSpacing.s2),
+          const SizedBox(height: 6),
           Row(
             children: const [
-              Icon(Icons.schedule_outlined, color: AppColors.primary, size: 16),
+              Icon(Icons.schedule_outlined, color: Colors.black87, size: 16),
               SizedBox(width: 8),
-              Text('${AppStrings.openingDays} | ${AppStrings.openingHours}',
-                  style: TextStyle(fontSize: 13, color: AppColors.textSecondary)),
+              Text('Monday - Sunday | ', style: TextStyle(fontSize: 12, color: Colors.black87, fontWeight: FontWeight.w600)),
+              Text('09:00 AM - 11:00 PM', style: TextStyle(fontSize: 12, color: AppColors.accent, fontWeight: FontWeight.w600)),
             ],
           ),
-          const SizedBox(height: AppSpacing.s3),
+          const SizedBox(height: 12),
           Row(
             children: [
               Expanded(
@@ -365,21 +458,26 @@ class _FooterInfoStrip extends StatelessWidget {
                     final uri = Uri.parse('tel:+91${AppStrings.phone1}');
                     if (await canLaunchUrl(uri)) launchUrl(uri);
                   },
-                  icon: const Icon(Icons.call_outlined, size: 14),
-                  label: const Text('Call Us', style: TextStyle(fontSize: 12)),
+                  icon: const Icon(Icons.call, size: 16, color: AppColors.primary),
+                  label: const Text('Call Us', style: TextStyle(fontSize: 14, color: AppColors.primary, fontWeight: FontWeight.w600)),
                   style: OutlinedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    side: const BorderSide(color: AppColors.primary),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
                   ),
                 ),
               ),
-              const SizedBox(width: AppSpacing.s3),
+              const SizedBox(width: 12),
               Expanded(
                 child: ElevatedButton.icon(
-                  onPressed: () => GoRouter.of(context).go('/menu'),
-                  icon: const Icon(Icons.restaurant_menu, size: 14),
-                  label: const Text('View Menu', style: TextStyle(fontSize: 12)),
+                  onPressed: () => GoRouter.of(context).push('/menu'),
+                  icon: const Icon(Icons.restaurant_menu, size: 16, color: Colors.white),
+                  label: const Text('View Menu', style: TextStyle(fontSize: 14, color: Colors.white, fontWeight: FontWeight.w600)),
                   style: ElevatedButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: AppColors.accent,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    elevation: 0,
                   ),
                 ),
               ),

@@ -7,7 +7,8 @@ class TrackOrderScreen extends StatelessWidget {
   const TrackOrderScreen({super.key});
 
   static const _steps = [
-    _StepData(Icons.check_circle, 'Order Placed', 'Your order has been received', true),
+    _StepData(Icons.check_circle, 'Pending', 'Your order has been received', true),
+    _StepData(Icons.thumb_up, 'Accepted', 'Restaurant accepted your order', true),
     _StepData(Icons.restaurant, 'Preparing', 'Kitchen is preparing your food', true),
     _StepData(Icons.delivery_dining, 'Out for Delivery', 'Rider is on the way', false),
     _StepData(Icons.home, 'Delivered', 'Enjoy your meal!', false),

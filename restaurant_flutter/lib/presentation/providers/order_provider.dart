@@ -240,7 +240,7 @@ final myOrdersProvider = FutureProvider<List<Order>>((ref) async {
         .eq('user_id', userId)
         .gte('created_at', thirtyDaysAgo)
         .order('created_at', ascending: false)
-        .limit(50);
+        .limit(7);
     print('[myOrdersProvider] Found ${(data as List).length} orders for user $userId');
     return (data).map((row) => Order.fromSupabase(row as Map<String, dynamic>)).toList();
   } catch (e) {

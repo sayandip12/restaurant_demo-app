@@ -84,6 +84,8 @@ flutter:
   assets:
     - assets/images/
     - assets/images/food/
+    - assets/images/popular/
+    - assets/images/hero/
     - assets/fonts/
     - .env
 
