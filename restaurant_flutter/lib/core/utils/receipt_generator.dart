@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'dart:typed_data';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:pdf/pdf.dart';
@@ -21,22 +22,23 @@ class ReceiptGenerator {
     try {
       final logoBytes = await rootBundle.load('assets/images/logo.png');
       logoImage = pw.MemoryImage(logoBytes.buffer.asUint8List());
-      print('[ReceiptGenerator] Logo loaded successfully.');
+      debugPrint('[ReceiptGenerator] Logo loaded successfully.');
     } catch (e) {
-      print('[ReceiptGenerator] Logo not found, skipping: $e');
+      debugPrint('[ReceiptGenerator] Logo not found, skipping: $e');
     }
 
     // Load NotoSans fonts (full Unicode support including ₹ symbol)
     pw.Font fontNormal;
     pw.Font fontBold;
     try {
-      final regularData = await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
+      final regularData =
+          await rootBundle.load('assets/fonts/NotoSans-Regular.ttf');
       final boldData = await rootBundle.load('assets/fonts/NotoSans-Bold.ttf');
       fontNormal = pw.Font.ttf(regularData);
       fontBold = pw.Font.ttf(boldData);
-      print('[ReceiptGenerator] NotoSans fonts loaded.');
+      debugPrint('[ReceiptGenerator] NotoSans fonts loaded.');
     } catch (e) {
-      print('[ReceiptGenerator] Font load failed, using fallback: $e');
+      debugPrint('[ReceiptGenerator] Font load failed, using fallback: $e');
       fontNormal = pw.Font.helvetica();
       fontBold = pw.Font.helveticaBold();
     }
@@ -150,22 +152,14 @@ class ReceiptGenerator {
     );
 
     final bytes = await doc.save();
-    print('[ReceiptGenerator] PDF generated. Size: ${bytes.length} bytes');
+    debugPrint('[ReceiptGenerator] PDF generated. Size: ${bytes.length} bytes');
     return bytes;
   }
 
   static pw.Widget _dashedLine(pw.Font font) {
     return pw.Padding(
       padding: const pw.EdgeInsets.symmetric(vertical: 3),
-      child: pw.Text('- ' * 26,
-          style: pw.TextStyle(font: font, fontSize: 7)),
-    );
-  }
-
-  static pw.Widget _solidLine(pw.Font font) {
-    return pw.Padding(
-      padding: const pw.EdgeInsets.symmetric(vertical: 2),
-      child: pw.Divider(height: 1, thickness: 0.5),
+      child: pw.Text('- ' * 26, style: pw.TextStyle(font: font, fontSize: 7)),
     );
   }
 
@@ -177,13 +171,12 @@ class ReceiptGenerator {
         children: [
           pw.SizedBox(
               width: 44,
-              child: pw.Text(label,
-                  style: pw.TextStyle(font: font, fontSize: 9))),
-          pw.Text(': ',
-              style: pw.TextStyle(font: font, fontSize: 9)),
+              child:
+                  pw.Text(label, style: pw.TextStyle(font: font, fontSize: 9))),
+          pw.Text(': ', style: pw.TextStyle(font: font, fontSize: 9)),
           pw.Expanded(
-              child: pw.Text(value,
-                  style: pw.TextStyle(font: font, fontSize: 9))),
+              child:
+                  pw.Text(value, style: pw.TextStyle(font: font, fontSize: 9))),
         ],
       ),
     );
@@ -193,16 +186,25 @@ class ReceiptGenerator {
     dt = dt.toLocal();
     const months = [
       '',
-      'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
-      'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'
+      'Jan',
+      'Feb',
+      'Mar',
+      'Apr',
+      'May',
+      'Jun',
+      'Jul',
+      'Aug',
+      'Sep',
+      'Oct',
+      'Nov',
+      'Dec'
     ];
     return '${dt.day.toString().padLeft(2, '0')} ${months[dt.month]} ${dt.year}';
   }
 
   static String _formatTime(DateTime dt) {
     dt = dt.toLocal();
-    final h =
-        dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
+    final h = dt.hour > 12 ? dt.hour - 12 : (dt.hour == 0 ? 12 : dt.hour);
     final ampm = dt.hour >= 12 ? 'PM' : 'AM';
     final m = dt.minute.toString().padLeft(2, '0');
     return '$h:$m $ampm';

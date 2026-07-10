@@ -24,7 +24,8 @@ class OffersScreen extends StatelessWidget {
         children: const [
           _OfferCard(
             title: 'Welcome Discount',
-            description: 'Get 10% off on your first order. Use code at checkout or mention on WhatsApp.',
+            description:
+                'Get 10% off on your first order. Use code at checkout or mention on WhatsApp.',
             code: 'WELCOME10',
             icon: Icons.celebration,
             color: AppColors.accent,
@@ -32,7 +33,8 @@ class OffersScreen extends StatelessWidget {
           SizedBox(height: AppSpacing.s4),
           _OfferCard(
             title: 'Free Delivery',
-            description: 'Free delivery on all orders above ₹500. Valid for Kalyani region only.',
+            description:
+                'Free delivery on all orders above ₹500. Valid for Kalyani region only.',
             code: 'FREEDEL',
             icon: Icons.delivery_dining,
             color: AppColors.primary,
@@ -40,7 +42,8 @@ class OffersScreen extends StatelessWidget {
           SizedBox(height: AppSpacing.s4),
           _OfferCard(
             title: 'Weekend Special',
-            description: 'Flat ₹50 off on Biryani Combos every Saturday and Sunday.',
+            description:
+                'Flat ₹50 off on Biryani Combos every Saturday and Sunday.',
             code: 'WKND50',
             icon: Icons.restaurant,
             color: Color(0xFF8B5CF6),
@@ -80,7 +83,8 @@ class _OfferCard extends StatelessWidget {
             padding: const EdgeInsets.all(AppSpacing.s4),
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.1),
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusLg)),
+              borderRadius: const BorderRadius.vertical(
+                  top: Radius.circular(AppSpacing.radiusLg)),
               border: Border(bottom: BorderSide(color: AppColors.borderLight)),
             ),
             child: Row(
@@ -99,10 +103,11 @@ class _OfferCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(title,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                color: color,
-                                fontWeight: FontWeight.w700,
-                              )),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    color: color,
+                                    fontWeight: FontWeight.w700,
+                                  )),
                     ],
                   ),
                 ),
@@ -125,7 +130,8 @@ class _OfferCard extends StatelessWidget {
                   decoration: BoxDecoration(
                     color: AppColors.background,
                     borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                    border: Border.all(color: AppColors.border, style: BorderStyle.solid),
+                    border: Border.all(
+                        color: AppColors.border, style: BorderStyle.solid),
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -145,13 +151,15 @@ class _OfferCard extends StatelessWidget {
                         },
                         child: Row(
                           children: const [
-                            Icon(Icons.copy, size: 16, color: AppColors.primary),
+                            Icon(Icons.copy,
+                                size: 16, color: AppColors.primary),
                             SizedBox(width: 4),
-                            Text('COPY', style: TextStyle(
-                              color: AppColors.primary,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            )),
+                            Text('COPY',
+                                style: TextStyle(
+                                  color: AppColors.primary,
+                                  fontSize: 12,
+                                  fontWeight: FontWeight.w700,
+                                )),
                           ],
                         ),
                       ),

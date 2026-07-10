@@ -35,11 +35,11 @@ class _CheckoutFormState extends State<CheckoutForm> {
   void initState() {
     super.initState();
     print('DEBUG: Number of addresses loaded: ${widget.addresses.length}');
-    
+
     if (widget.addresses.isNotEmpty) {
       final firstAddr = widget.addresses.first;
       print('DEBUG: Contents of first address: $firstAddr');
-      
+
       _selectedAddressId = firstAddr['id']?.toString();
       _applyAddress(firstAddr);
     }
@@ -48,13 +48,15 @@ class _CheckoutFormState extends State<CheckoutForm> {
   @override
   void didUpdateWidget(CheckoutForm oldWidget) {
     super.didUpdateWidget(oldWidget);
-    print('DEBUG [CheckoutForm]: didUpdateWidget called. Old len: ${oldWidget.addresses.length}, New len: ${widget.addresses.length}');
-    
+    print(
+        'DEBUG [CheckoutForm]: didUpdateWidget called. Old len: ${oldWidget.addresses.length}, New len: ${widget.addresses.length}');
+
     // If addresses arrived asynchronously after the widget was already built
     if (widget.addresses.isNotEmpty && oldWidget.addresses.isEmpty) {
       final firstAddr = widget.addresses.first;
-      print('DEBUG [CheckoutForm]: Addresses arrived async, applying first address: $firstAddr');
-      
+      print(
+          'DEBUG [CheckoutForm]: Addresses arrived async, applying first address: $firstAddr');
+
       _selectedAddressId = firstAddr['id']?.toString();
       _applyAddress(firstAddr);
     }
@@ -85,7 +87,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
             ],
           ),
           const SizedBox(height: AppSpacing.s4),
-          
           if (widget.addresses.length > 1) ...[
             Container(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s3),
@@ -103,13 +104,15 @@ class _CheckoutFormState extends State<CheckoutForm> {
                     final label = '${addr['name']} - ${addr['address']}';
                     return DropdownMenuItem(
                       value: id,
-                      child: Text(label, maxLines: 1, overflow: TextOverflow.ellipsis),
+                      child: Text(label,
+                          maxLines: 1, overflow: TextOverflow.ellipsis),
                     );
                   }).toList(),
                   onChanged: (val) {
                     if (val == null) return;
                     setState(() => _selectedAddressId = val);
-                    final addr = widget.addresses.firstWhere((a) => a['id'].toString() == val);
+                    final addr = widget.addresses
+                        .firstWhere((a) => a['id'].toString() == val);
                     _applyAddress(addr);
                   },
                 ),
@@ -117,7 +120,6 @@ class _CheckoutFormState extends State<CheckoutForm> {
             ),
             const SizedBox(height: AppSpacing.s4),
           ],
-
           _Field(
             controller: widget.nameCtrl,
             label: 'Full Name *',

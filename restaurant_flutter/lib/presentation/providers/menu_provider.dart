@@ -12,11 +12,13 @@ class MenuState {
     this.selectedCategoryId,
   });
 
-  MenuState copyWith({String? searchQuery, Object? selectedCategoryId = _sentinel}) {
+  MenuState copyWith(
+      {String? searchQuery, Object? selectedCategoryId = _sentinel}) {
     return MenuState(
       searchQuery: searchQuery ?? this.searchQuery,
-      selectedCategoryId:
-          selectedCategoryId == _sentinel ? this.selectedCategoryId : selectedCategoryId as String?,
+      selectedCategoryId: selectedCategoryId == _sentinel
+          ? this.selectedCategoryId
+          : selectedCategoryId as String?,
     );
   }
 }

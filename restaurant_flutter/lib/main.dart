@@ -56,7 +56,8 @@ class _AppInitializerState extends State<AppInitializer> {
   Widget build(BuildContext context) {
     if (_error != null) {
       return MaterialApp(
-        home: Scaffold(body: Center(child: Text('Failed to initialize: $_error'))),
+        home: Scaffold(
+            body: Center(child: Text('Failed to initialize: $_error'))),
       );
     }
     if (!_initialized) {

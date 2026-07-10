@@ -48,21 +48,22 @@ class ReceiptScreen extends ConsumerWidget {
                   initialPageFormat: PdfPageFormat.roll80,
                 ),
               ),
-              
+
               // Action Buttons
               Container(
                 padding: const EdgeInsets.all(AppSpacing.s4),
-                decoration: BoxDecoration(
-                  color: AppColors.white,
-                  boxShadow: [
-                    BoxShadow(color: AppColors.gray200, blurRadius: 4, offset: const Offset(0, -2))
-                  ]
-                ),
+                decoration: BoxDecoration(color: AppColors.white, boxShadow: [
+                  BoxShadow(
+                      color: AppColors.gray200,
+                      blurRadius: 4,
+                      offset: const Offset(0, -2))
+                ]),
                 child: SafeArea(
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) ...[
+                      if (order.receiptUrl != null &&
+                          order.receiptUrl!.isNotEmpty) ...[
                         SizedBox(
                           width: double.infinity,
                           child: ElevatedButton.icon(
@@ -70,7 +71,8 @@ class ReceiptScreen extends ConsumerWidget {
                               // Open PDF directly
                               final url = order.receiptUrl!;
                               if (await canLaunchUrl(Uri.parse(url))) {
-                                await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+                                await launchUrl(Uri.parse(url),
+                                    mode: LaunchMode.externalApplication);
                               }
                             },
                             icon: const Icon(Icons.open_in_new),
@@ -84,7 +86,8 @@ class ReceiptScreen extends ConsumerWidget {
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: () async {
-                                final bytes = await ReceiptGenerator.generatePdf(order);
+                                final bytes =
+                                    await ReceiptGenerator.generatePdf(order);
                                 await Printing.sharePdf(
                                   bytes: bytes,
                                   filename: 'Receipt_${order.id}.pdf',
@@ -98,12 +101,15 @@ class ReceiptScreen extends ConsumerWidget {
                           Expanded(
                             child: OutlinedButton.icon(
                               onPressed: () async {
-                                if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) {
+                                if (order.receiptUrl != null &&
+                                    order.receiptUrl!.isNotEmpty) {
                                   // Share the public URL
-                                  await Share.share('Here is my order receipt: ${order.receiptUrl}');
+                                  await Share.share(
+                                      'Here is my order receipt: ${order.receiptUrl}');
                                 } else {
                                   // Fallback to sharing the PDF file itself
-                                  final bytes = await ReceiptGenerator.generatePdf(order);
+                                  final bytes =
+                                      await ReceiptGenerator.generatePdf(order);
                                   await Printing.sharePdf(
                                     bytes: bytes,
                                     filename: 'Receipt_${order.id}.pdf',

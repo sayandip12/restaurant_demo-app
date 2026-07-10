@@ -88,7 +88,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
       if (_phoneCtrl.text.isEmpty) _phoneCtrl.text = addr['phone'] ?? '';
       if (_addressCtrl.text.isEmpty) _addressCtrl.text = addr['address'] ?? '';
       if (_pincodeCtrl.text.isEmpty) _pincodeCtrl.text = addr['pincode'] ?? '';
-      if (_landmarkCtrl.text.isEmpty) _landmarkCtrl.text = addr['landmark'] ?? '';
+      if (_landmarkCtrl.text.isEmpty)
+        _landmarkCtrl.text = addr['landmark'] ?? '';
     }
   }
 
@@ -135,7 +136,8 @@ class _CartScreenState extends ConsumerState<CartScreen> {
           );
         }
         if (_step == 1) {
-          print('DEBUG [CartScreen]: step == 1. addresses watched from provider: ${addresses.length}');
+          print(
+              'DEBUG [CartScreen]: step == 1. addresses watched from provider: ${addresses.length}');
           return _CheckoutStep(
             formKey: _formKey,
             nameCtrl: _nameCtrl,
@@ -171,7 +173,8 @@ class _EmptyCart extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Icon(Icons.shopping_bag_outlined, size: 80, color: AppColors.border),
+          const Icon(Icons.shopping_bag_outlined,
+              size: 80, color: AppColors.border),
           const SizedBox(height: AppSpacing.s4),
           Text('Your cart is empty',
               style: Theme.of(context).textTheme.headlineSmall?.copyWith(
@@ -281,7 +284,8 @@ class _CheckoutStep extends StatelessWidget {
             decoration: BoxDecoration(
               color: AppColors.dangerLight,
               borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-              border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
+              border:
+                  Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
             ),
             child: const Row(
               children: [
@@ -290,7 +294,10 @@ class _CheckoutStep extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Restaurant is currently closed.\nOrders are accepted from 11:00 AM to 1:00 AM.',
-                    style: TextStyle(color: AppColors.danger, fontWeight: FontWeight.w600, fontSize: 13),
+                    style: TextStyle(
+                        color: AppColors.danger,
+                        fontWeight: FontWeight.w600,
+                        fontSize: 13),
                   ),
                 ),
               ],
@@ -345,7 +352,8 @@ class _ProceedButton extends StatelessWidget {
                 )
               : Text(
                   '$label  |  ₹$total',
-                  style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                  style: const TextStyle(
+                      fontSize: 16, fontWeight: FontWeight.w700),
                 ),
         ),
       ),

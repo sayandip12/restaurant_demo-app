@@ -15,16 +15,19 @@ class CircularPopularCarousel extends ConsumerStatefulWidget {
   const CircularPopularCarousel({super.key});
 
   @override
-  ConsumerState<CircularPopularCarousel> createState() => _CircularPopularCarouselState();
+  ConsumerState<CircularPopularCarousel> createState() =>
+      _CircularPopularCarouselState();
 }
 
-class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarousel> {
+class _CircularPopularCarouselState
+    extends ConsumerState<CircularPopularCarousel> {
   final Map<String, String> _popularImages = {
     'Chicken Kasha': 'assets/images/popular/Chicken_Kasha.jpg',
     'Egg Chicken Biryani': 'assets/images/popular/Egg.Chicken_Biryani.jpg',
     'Paneer Butter Masala': 'assets/images/popular/Paneer_Butter_Masala.jpg',
-    'Egg Chicken Noodle': 'assets/images/popular/Egg.chicken_Noodles.jpg', // Name in menu_data is 'Egg Chicken Noodle'
-    'Chicken Steam Momo (6 pcs)': 'assets/images/popular/Chicken_Steam_Momo_(6pcs).jpg',
+    'Egg Chicken Noodle': 'assets/images/popular/Egg.chicken_Noodles.jpg',
+    'Chicken Steam Momo (6 pcs)':
+        'assets/images/popular/Chicken_Steam_Momo_(6pcs).jpg',
     'Chilli Chicken (6 pcs)': 'assets/images/popular/Chilli_Chicken_(6pcs).jpg',
     'Chicken Satay (2 pcs)': 'assets/images/popular/ChickenSatay(2pcs).jpg',
     'Lachha Paratha': 'assets/images/popular/Laccha_Paratha.jpg',
@@ -48,27 +51,48 @@ class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarouse
       final allItems = getAllItems();
       _items = _popularImages.keys.map<MenuItem>((name) {
         return allItems.firstWhere(
-          (item) => item.name == name || item.name.contains(name.replaceAll(' (6 pcs)', '').replaceAll(' (2 pcs)', '')),
+          (item) =>
+              item.name == name ||
+              item.name.contains(
+                  name.replaceAll(' (6 pcs)', '').replaceAll(' (2 pcs)', '')),
           orElse: () => allItems.first,
         );
       }).toList();
-      // De-duplicate just in case
       _items = _items.toSet().toList();
     }
   }
 
+  Timer? _pauseTimer;
+
   @override
   void dispose() {
     _timer?.cancel();
+    _pauseTimer?.cancel();
     super.dispose();
   }
 
   void _startTimer() {
+    _timer?.cancel();
     _timer = Timer.periodic(const Duration(seconds: 3), (timer) {
       if (!mounted) return;
       setState(() {
         _currentIndex = (_currentIndex + 1) % _items.length;
       });
+    });
+  }
+
+  void _handleSwipe(bool isLeft) {
+    _timer?.cancel();
+    _pauseTimer?.cancel();
+    setState(() {
+      if (isLeft) {
+        _currentIndex = (_currentIndex + 1) % _items.length;
+      } else {
+        _currentIndex = (_currentIndex - 1 + _items.length) % _items.length;
+      }
+    });
+    _pauseTimer = Timer(const Duration(seconds: 4), () {
+      if (mounted) _startTimer();
     });
   }
 
@@ -91,120 +115,188 @@ class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarouse
     return Column(
       children: [
         // Header
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Popular Dishes',
-              style: TextStyle(
-                fontFamily: 'Outfit',
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-                color: AppColors.textPrimary,
-              ),
-            ),
-            TextButton(
-              onPressed: () => context.push('/menu'),
-              style: TextButton.styleFrom(
-                foregroundColor: AppColors.primary,
-                padding: EdgeInsets.zero,
-                minimumSize: Size.zero,
-                tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-              ),
-              child: const Row(
-                children: [
-                  Text('See All', style: TextStyle(fontWeight: FontWeight.w600, fontSize: 14)),
-                  SizedBox(width: 4),
-                  Icon(Icons.arrow_forward_ios, size: 12),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 16),
-        // Carousel Area
-        SizedBox(
-          height: 310,
-          child: Stack(
-            alignment: Alignment.center,
-            clipBehavior: Clip.none,
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // Dashed circle placeholder
-              CustomPaint(
-                size: const Size(300, 300),
-                painter: _DashedCirclePainter(color: AppColors.primary.withOpacity(0.5)),
+              const Text(
+                'Popular Dishes',
+                style: TextStyle(
+                  fontFamily: 'Outfit',
+                  fontSize: 20,
+                  fontWeight: FontWeight.w800,
+                  color: AppColors.textPrimary,
+                ),
               ),
-              // Items
-              ...List.generate(_items.length, (index) {
-                // Calculate position on the circle
-                int diff = index - _currentIndex;
-                if (diff < -_items.length / 2) diff += _items.length;
-                if (diff > _items.length / 2) diff -= _items.length;
+              TextButton(
+                onPressed: () => context.push('/menu'),
+                style: TextButton.styleFrom(
+                  foregroundColor: AppColors.primary,
+                  padding: EdgeInsets.zero,
+                  minimumSize: Size.zero,
+                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                ),
+                child: const Row(
+                  children: [
+                    Text('See All',
+                        style: TextStyle(
+                            fontWeight: FontWeight.w600, fontSize: 14)),
+                    SizedBox(width: 4),
+                    Icon(Icons.arrow_forward_ios, size: 12),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 24),
+        // Carousel Area
+        GestureDetector(
+          onHorizontalDragEnd: (details) {
+            if (details.primaryVelocity! < 0) {
+              _handleSwipe(true); // Swipe left -> Next
+            } else if (details.primaryVelocity! > 0) {
+              _handleSwipe(false); // Swipe right -> Previous
+            }
+          },
+          child: SizedBox(
+            height: 240,
+            child: Stack(
+              alignment: Alignment.center,
+              clipBehavior: Clip.none,
+              children: [
+                // Items
+                ...List.generate(_items.length, (index) {
+                  // Wrap diff
+                  int diff = index - _currentIndex;
+                  int halfLen = _items.length ~/ 2;
+                  if (diff < -halfLen) diff += _items.length;
+                  if (diff > _items.length - halfLen - 1) diff -= _items.length;
 
-                final double angle = (pi / 2) + (diff * (2 * pi / _items.length));
-                final bool isCenter = diff == 0;
+                  // Calculate properties based on position (diff)
+                  // -3 = left entering/exiting, 0 = center, 3 = right entering/exiting
 
-                const double radius = 120.0;
-                final double x = cos(angle) * radius;
-                final double y = sin(angle) * radius - 50; 
+                  double angle = (pi / 2) - (diff * (pi / 5.5));
+                  const double radius = 220.0;
 
-                return AnimatedPositioned(
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeInOut,
-                  left: 150 + x - (isCenter ? 90 : 35),
-                  top: 150 + y - (isCenter ? 90 : 35),
-                  child: AnimatedScale(
-                    scale: 1.0,
+                  final double x = cos(angle) * radius;
+                  final double y = -sin(angle) * radius;
+
+                  double scale = 0.0;
+                  double opacity = 0.0;
+                  bool isVisible = false;
+
+                  if (diff == 0) {
+                    scale = 1.0;
+                    opacity = 1.0;
+                    isVisible = true;
+                  } else if (diff.abs() == 1) {
+                    scale = 0.65;
+                    opacity = 0.9;
+                    isVisible = true;
+                  } else if (diff.abs() == 2) {
+                    scale = 0.45;
+                    opacity = 0.6;
+                    isVisible = true;
+                  } else if (diff.abs() == 3) {
+                    scale = 0.25;
+                    opacity = 0.0;
+                    isVisible = true;
+                  }
+
+                  const double baseSize = 160.0;
+                  final double centerY = 90.0 + radius;
+
+                  return AnimatedPositioned(
+                    key: ValueKey(_items[index].id),
                     duration: const Duration(milliseconds: 600),
                     curve: Curves.easeInOut,
-                    child: GestureDetector(
-                      onTap: () => _onItemTapped(index),
-                      child: AnimatedContainer(
+                    left: MediaQuery.of(context).size.width / 2 -
+                        (baseSize / 2) +
+                        x,
+                    top: centerY + y - (baseSize / 2),
+                    child: IgnorePointer(
+                      ignoring: !isVisible,
+                      child: AnimatedOpacity(
                         duration: const Duration(milliseconds: 600),
-                        width: isCenter ? 180 : 70,
-                        height: isCenter ? 180 : 70,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: isCenter
-                              ? [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.25),
-                                    blurRadius: 20,
-                                    spreadRadius: 2,
-                                    offset: const Offset(0, 10),
-                                  )
-                                ]
-                              : [
-                                  BoxShadow(
-                                    color: Colors.black.withOpacity(0.15),
-                                    blurRadius: 8,
-                                    offset: const Offset(0, 4),
-                                  )
-                                ],
-                        ),
-                        child: ClipOval(
-                          child: Container(
-                            color: Colors.white,
-                            padding: EdgeInsets.all(isCenter ? 6 : 3),
-                            child: ClipOval(
-                              child: Image.asset(
-                                _popularImages[_items[index].name] ?? _items[index].image,
-                                fit: BoxFit.cover,
+                        curve: Curves.easeInOut,
+                        opacity: opacity,
+                        child: AnimatedScale(
+                          scale: scale,
+                          duration: const Duration(milliseconds: 600),
+                          curve: Curves.easeInOut,
+                          child: GestureDetector(
+                            onTap: () => _onItemTapped(index),
+                            child: Container(
+                              width: baseSize,
+                              height: baseSize,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                boxShadow: diff == 0
+                                    ? [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.2),
+                                          blurRadius: 20,
+                                          spreadRadius: 2,
+                                          offset: const Offset(0, 10),
+                                        )
+                                      ]
+                                    : [
+                                        BoxShadow(
+                                          color: Colors.black.withOpacity(0.1),
+                                          blurRadius: 8,
+                                          offset: const Offset(0, 4),
+                                        )
+                                      ],
+                              ),
+                              child: ClipOval(
+                                child: Container(
+                                  color: Colors.white,
+                                  padding: EdgeInsets.all(diff == 0 ? 6 : 4),
+                                  child: ClipOval(
+                                    child: Image.asset(
+                                      _popularImages[_items[index].name] ??
+                                          _items[index].image,
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                );
-              }),
-            ],
+                  );
+                })
+                  // Re-order children based on absolute diff to bring center item to top
+                  ..sort((a, b) {
+                    int getDiff(Key? key) {
+                      if (key == null) return 100;
+                      final id = (key as ValueKey).value as String;
+                      int idx = _items.indexWhere((item) => item.id == id);
+                      int diff = idx - _currentIndex;
+                      int halfLen = _items.length ~/ 2;
+                      if (diff < -halfLen) diff += _items.length;
+                      if (diff > _items.length - halfLen - 1)
+                        diff -= _items.length;
+                      return diff.abs();
+                    }
+
+                    // We want smaller diff to be drawn LAST (highest Z-index)
+                    return getDiff(b.key).compareTo(getDiff(a.key));
+                  }),
+              ],
+            ),
           ),
         ),
         // Info Card for Center Item
         const SizedBox(height: 10),
-        _buildInfoCard(_items[_currentIndex]),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: _buildInfoCard(_items[_currentIndex]),
+        ),
       ],
     );
   }
@@ -260,21 +352,31 @@ class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarouse
                     Row(
                       children: [
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: Colors.grey.shade100,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Text('Half ₹${item.price}', style: const TextStyle(fontSize: 10, color: AppColors.textSecondary, fontWeight: FontWeight.w600)),
+                          child: Text('Half ₹${item.price}',
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  color: AppColors.textSecondary,
+                                  fontWeight: FontWeight.w600)),
                         ),
                         const SizedBox(width: 4),
                         Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 6, vertical: 2),
                           decoration: BoxDecoration(
                             color: AppColors.primary,
                             borderRadius: BorderRadius.circular(4),
                           ),
-                          child: Text('Full ₹${item.priceL}', style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.w600)),
+                          child: Text('Full ₹${item.priceL}',
+                              style: const TextStyle(
+                                  fontSize: 10,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600)),
                         ),
                       ],
                     ),
@@ -312,14 +414,16 @@ class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarouse
                     }
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                     decoration: BoxDecoration(
                       color: AppColors.accent,
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Row(
                       children: [
-                        Icon(Icons.shopping_cart_outlined, size: 14, color: Colors.white),
+                        Icon(Icons.shopping_cart_outlined,
+                            size: 14, color: Colors.white),
                         SizedBox(width: 4),
                         Text(
                           'Add to Cart',
@@ -340,37 +444,4 @@ class _CircularPopularCarouselState extends ConsumerState<CircularPopularCarouse
       ),
     );
   }
-}
-
-class _DashedCirclePainter extends CustomPainter {
-  final Color color;
-  _DashedCirclePainter({required this.color});
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final Paint paint = Paint()
-      ..color = color
-      ..strokeWidth = 1.5
-      ..style = PaintingStyle.stroke;
-
-    const double radius = 120.0;
-    final Offset center = Offset(size.width / 2, size.height / 2 - 50);
-
-    const int dashCount = 30;
-    const double dashLength = (pi) / (dashCount * 2);
-    
-    for (int i = 0; i < dashCount; i++) {
-      final double startAngle = pi + (i * 2 * dashLength);
-      canvas.drawArc(
-        Rect.fromCircle(center: center, radius: radius),
-        startAngle,
-        dashLength,
-        false,
-        paint,
-      );
-    }
-  }
-
-  @override
-  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

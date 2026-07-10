@@ -2,7 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'auth_provider.dart';
 
-final savedAddressesProvider = StateNotifierProvider<SavedAddressesNotifier, List<Map<String, dynamic>>>((ref) {
+final savedAddressesProvider =
+    StateNotifierProvider<SavedAddressesNotifier, List<Map<String, dynamic>>>(
+        (ref) {
   final user = ref.watch(currentUserProvider);
   return SavedAddressesNotifier(user?.id);
 });
@@ -24,10 +26,11 @@ class SavedAddressesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
           .select()
           .eq('user_id', userId!)
           .order('created_at', ascending: false);
-      
-      print('DEBUG [AddressProvider]: Number of addresses returned from Supabase: ${data.length}');
+
+      print(
+          'DEBUG [AddressProvider]: Number of addresses returned from Supabase: ${data.length}');
       print('DEBUG [AddressProvider]: Data returned: $data');
-      
+
       state = List<Map<String, dynamic>>.from(data);
     } catch (e) {
       print('DEBUG [AddressProvider]: Error loading addresses: $e');
@@ -45,8 +48,12 @@ class SavedAddressesNotifier extends StateNotifier<List<Map<String, dynamic>>> {
         'pincode': address['pincode'],
         'landmark': address['landmark'],
       };
-      
-      final data = await _supabase.from('addresses').insert(insertData).select().single();
+
+      final data = await _supabase
+          .from('addresses')
+          .insert(insertData)
+          .select()
+          .single();
       state = [data, ...state];
     } catch (e) {
       // ignore

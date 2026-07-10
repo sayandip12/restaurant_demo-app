@@ -13,7 +13,8 @@ class MenuItemDetailSheet extends ConsumerStatefulWidget {
   const MenuItemDetailSheet({super.key, required this.item});
 
   @override
-  ConsumerState<MenuItemDetailSheet> createState() => _MenuItemDetailSheetState();
+  ConsumerState<MenuItemDetailSheet> createState() =>
+      _MenuItemDetailSheetState();
 }
 
 class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
@@ -22,11 +23,14 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
   @override
   Widget build(BuildContext context) {
     final item = widget.item;
-    final currentPrice = _isLarge && item.priceL != null ? item.priceL! : item.price;
+    final currentPrice =
+        _isLarge && item.priceL != null ? item.priceL! : item.price;
     final cartId = _isLarge && item.priceL != null ? '${item.id}-L' : item.id;
-    final cartName = _isLarge && item.priceL != null ? '${item.name} (Full)' : item.name;
+    final cartName =
+        _isLarge && item.priceL != null ? '${item.name} (Full)' : item.name;
 
-    final qty = ref.watch(cartProvider.select((s) => s.getItemQuantity(cartId)));
+    final qty =
+        ref.watch(cartProvider.select((s) => s.getItemQuantity(cartId)));
 
     return DraggableScrollableSheet(
       initialChildSize: 0.75,
@@ -51,7 +55,8 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
             Expanded(
               child: ListView(
                 controller: controller,
-                padding: const EdgeInsets.fromLTRB(AppSpacing.s4, 0, AppSpacing.s4, AppSpacing.s8),
+                padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.s4, 0, AppSpacing.s4, AppSpacing.s8),
                 children: [
                   ClipRRect(
                     borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
@@ -94,7 +99,8 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                   ),
                   const SizedBox(height: AppSpacing.s4),
                   if (item.priceL != null) ...[
-                    const Text('Select Portion Size', style: TextStyle(fontWeight: FontWeight.bold)),
+                    const Text('Select Portion Size',
+                        style: TextStyle(fontWeight: FontWeight.bold)),
                     const SizedBox(height: AppSpacing.s2),
                     Row(
                       children: [
@@ -104,14 +110,31 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color: !_isLarge ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
-                                border: Border.all(color: !_isLarge ? AppColors.primary : AppColors.border),
+                                color: !_isLarge
+                                    ? AppColors.primary.withOpacity(0.1)
+                                    : Colors.transparent,
+                                border: Border.all(
+                                    color: !_isLarge
+                                        ? AppColors.primary
+                                        : AppColors.border),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
                                 children: [
-                                  Text('Half', style: TextStyle(fontWeight: !_isLarge ? FontWeight.bold : FontWeight.normal, color: !_isLarge ? AppColors.primary : AppColors.textSecondary)),
-                                  Text('₹${item.price}', style: TextStyle(fontWeight: FontWeight.bold, color: !_isLarge ? AppColors.primary : AppColors.textPrimary)),
+                                  Text('Half',
+                                      style: TextStyle(
+                                          fontWeight: !_isLarge
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: !_isLarge
+                                              ? AppColors.primary
+                                              : AppColors.textSecondary)),
+                                  Text('₹${item.price}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: !_isLarge
+                                              ? AppColors.primary
+                                              : AppColors.textPrimary)),
                                 ],
                               ),
                             ),
@@ -124,14 +147,31 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                             child: Container(
                               padding: const EdgeInsets.symmetric(vertical: 12),
                               decoration: BoxDecoration(
-                                color: _isLarge ? AppColors.primary.withOpacity(0.1) : Colors.transparent,
-                                border: Border.all(color: _isLarge ? AppColors.primary : AppColors.border),
+                                color: _isLarge
+                                    ? AppColors.primary.withOpacity(0.1)
+                                    : Colors.transparent,
+                                border: Border.all(
+                                    color: _isLarge
+                                        ? AppColors.primary
+                                        : AppColors.border),
                                 borderRadius: BorderRadius.circular(8),
                               ),
                               child: Column(
                                 children: [
-                                  Text('Full', style: TextStyle(fontWeight: _isLarge ? FontWeight.bold : FontWeight.normal, color: _isLarge ? AppColors.primary : AppColors.textSecondary)),
-                                  Text('₹${item.priceL}', style: TextStyle(fontWeight: FontWeight.bold, color: _isLarge ? AppColors.primary : AppColors.textPrimary)),
+                                  Text('Full',
+                                      style: TextStyle(
+                                          fontWeight: _isLarge
+                                              ? FontWeight.bold
+                                              : FontWeight.normal,
+                                          color: _isLarge
+                                              ? AppColors.primary
+                                              : AppColors.textSecondary)),
+                                  Text('₹${item.priceL}',
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: _isLarge
+                                              ? AppColors.primary
+                                              : AppColors.textPrimary)),
                                 ],
                               ),
                             ),
@@ -146,7 +186,10 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text('Price', style: TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                            const Text('Price',
+                                style: TextStyle(
+                                    fontSize: 12,
+                                    color: AppColors.textSecondary)),
                             Text(
                               '₹${item.price}',
                               style: const TextStyle(
@@ -179,8 +222,10 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                         icon: const Icon(Icons.add_shopping_cart),
                         label: const Text('Add to Cart'),
                         style: ElevatedButton.styleFrom(
-                          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s4),
-                          textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w700),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.s4),
+                          textStyle: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.w700),
                         ),
                       ),
                     )
@@ -201,7 +246,9 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                                   );
                             },
                             onDecrease: () {
-                              ref.read(cartProvider.notifier).updateQuantity(cartId, qty - 1);
+                              ref
+                                  .read(cartProvider.notifier)
+                                  .updateQuantity(cartId, qty - 1);
                             },
                           ),
                         ),
@@ -211,7 +258,9 @@ class _MenuItemDetailSheetState extends ConsumerState<MenuItemDetailSheet> {
                           icon: const Icon(Icons.check),
                           label: const Text('Done'),
                           style: ElevatedButton.styleFrom(
-                            padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s6, vertical: AppSpacing.s4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: AppSpacing.s6,
+                                vertical: AppSpacing.s4),
                           ),
                         ),
                       ],

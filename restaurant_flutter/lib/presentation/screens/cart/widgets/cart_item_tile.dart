@@ -74,7 +74,8 @@ class CartItemTile extends ConsumerWidget {
                   ),
                   const SizedBox(width: AppSpacing.s2),
                   GestureDetector(
-                    onTap: () => ref.read(cartProvider.notifier).removeItem(item.id),
+                    onTap: () =>
+                        ref.read(cartProvider.notifier).removeItem(item.id),
                     child: Container(
                       padding: const EdgeInsets.all(4),
                       decoration: BoxDecoration(

@@ -10,10 +10,26 @@ class AppScaffold extends ConsumerWidget {
   const AppScaffold({super.key, required this.child});
 
   static const _tabs = [
-    _NavTab(path: '/',        label: 'Home',    icon: Icons.home_outlined,         activeIcon: Icons.home),
-    _NavTab(path: '/menu',    label: 'Menu',    icon: Icons.grid_view_outlined,    activeIcon: Icons.grid_view),
-    _NavTab(path: '/cart',    label: 'Cart',    icon: Icons.shopping_bag_outlined,  activeIcon: Icons.shopping_bag),
-    _NavTab(path: '/profile', label: 'Profile', icon: Icons.person_outline,        activeIcon: Icons.person),
+    _NavTab(
+        path: '/',
+        label: 'Home',
+        icon: Icons.home_outlined,
+        activeIcon: Icons.home),
+    _NavTab(
+        path: '/menu',
+        label: 'Menu',
+        icon: Icons.grid_view_outlined,
+        activeIcon: Icons.grid_view),
+    _NavTab(
+        path: '/cart',
+        label: 'Cart',
+        icon: Icons.shopping_bag_outlined,
+        activeIcon: Icons.shopping_bag),
+    _NavTab(
+        path: '/profile',
+        label: 'Profile',
+        icon: Icons.person_outline,
+        activeIcon: Icons.person),
   ];
 
   int _currentIndex(BuildContext context) {
@@ -88,5 +104,9 @@ class _NavTab {
   final String label;
   final IconData icon;
   final IconData activeIcon;
-  const _NavTab({required this.path, required this.label, required this.icon, required this.activeIcon});
+  const _NavTab(
+      {required this.path,
+      required this.label,
+      required this.icon,
+      required this.activeIcon});
 }

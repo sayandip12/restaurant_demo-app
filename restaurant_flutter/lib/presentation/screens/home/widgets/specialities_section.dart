@@ -22,7 +22,10 @@ class SpecialitiesSection extends ConsumerWidget {
           subtitle: 'Handpicked by our head chef',
         ),
         const SizedBox(height: AppSpacing.s4),
-        ...items.asMap().entries.map((e) => _SpecialItem(item: e.value, index: e.key)),
+        ...items
+            .asMap()
+            .entries
+            .map((e) => _SpecialItem(item: e.value, index: e.key)),
       ],
     );
   }
@@ -35,7 +38,8 @@ class _SpecialItem extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qty = ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
+    final qty =
+        ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
 
     return Container(
       margin: const EdgeInsets.only(bottom: AppSpacing.s3),
@@ -92,15 +96,18 @@ class _SpecialItem extends ConsumerWidget {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
                         ),
-                        child: const Text('Add', style: TextStyle(fontSize: 12)),
+                        child:
+                            const Text('Add', style: TextStyle(fontSize: 12)),
                       )
                     else
                       QuantityStepper(
                         quantity: qty,
                         size: 26,
-                        onIncrease: () => ref.read(cartProvider.notifier).addItem(item),
-                        onDecrease: () =>
-                            ref.read(cartProvider.notifier).updateQuantity(item.id, qty - 1),
+                        onIncrease: () =>
+                            ref.read(cartProvider.notifier).addItem(item),
+                        onDecrease: () => ref
+                            .read(cartProvider.notifier)
+                            .updateQuantity(item.id, qty - 1),
                       ),
                   ],
                 ),
@@ -109,6 +116,9 @@ class _SpecialItem extends ConsumerWidget {
           ),
         ],
       ),
-    ).animate(delay: Duration(milliseconds: index * 100)).fadeIn().slideY(begin: 0.1);
+    )
+        .animate(delay: Duration(milliseconds: index * 100))
+        .fadeIn()
+        .slideY(begin: 0.1);
   }
 }

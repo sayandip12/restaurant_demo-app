@@ -52,7 +52,11 @@ class CartNotifier extends StateNotifier<CartState> {
     } catch (_) {}
   }
 
-  void addItem(MenuItem item, {int quantity = 1, String? customId, String? customName, int? customPrice}) {
+  void addItem(MenuItem item,
+      {int quantity = 1,
+      String? customId,
+      String? customName,
+      int? customPrice}) {
     final targetId = customId ?? item.id;
     final targetName = customName ?? item.name;
     final targetPrice = customPrice ?? item.price;

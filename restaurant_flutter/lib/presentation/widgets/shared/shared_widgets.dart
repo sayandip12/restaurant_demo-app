@@ -74,9 +74,21 @@ class ItemBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     if (badge == null) return const SizedBox.shrink();
     final (Color bg, Color fg, String label) = switch (badge!) {
-      'bestseller' => (AppColors.orange100, AppColors.orange600, '🔥 Bestseller'),
-      'chef' => (const Color(0xFFFEF3C7), const Color(0xFF92400E), '👨‍🍳 Chef\'s Pick'),
-      'most-ordered' => (AppColors.primaryLight, AppColors.primaryDark, '⭐ Most Ordered'),
+      'bestseller' => (
+          AppColors.orange100,
+          AppColors.orange600,
+          '🔥 Bestseller'
+        ),
+      'chef' => (
+          const Color(0xFFFEF3C7),
+          const Color(0xFF92400E),
+          '👨‍🍳 Chef\'s Pick'
+        ),
+      'most-ordered' => (
+          AppColors.primaryLight,
+          AppColors.primaryDark,
+          '⭐ Most Ordered'
+        ),
       _ => (AppColors.gray100, AppColors.gray600, badge!),
     };
     return Container(
@@ -275,7 +287,8 @@ class MenuItemImage extends StatelessWidget {
 }
 
 /// Show a snackbar toast
-void showAppToast(BuildContext context, String message, {bool isError = false}) {
+void showAppToast(BuildContext context, String message,
+    {bool isError = false}) {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text(message),

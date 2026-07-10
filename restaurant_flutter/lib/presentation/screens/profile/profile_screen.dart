@@ -65,9 +65,7 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 4),
                       Text(
-                        isLoggedIn
-                            ? displayEmail
-                            : 'Login to save your orders',
+                        isLoggedIn ? displayEmail : 'Login to save your orders',
                         style: Theme.of(context).textTheme.bodySmall,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -77,10 +75,8 @@ class ProfileScreen extends ConsumerWidget {
                           onPressed: () => context.push('/login'),
                           style: OutlinedButton.styleFrom(
                             minimumSize: const Size(100, 32),
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 16),
-                            side:
-                                const BorderSide(color: AppColors.primary),
+                            padding: const EdgeInsets.symmetric(horizontal: 16),
+                            side: const BorderSide(color: AppColors.primary),
                           ),
                           child: const Text(
                             'Login / Sign Up',
@@ -162,7 +158,8 @@ class ProfileScreen extends ConsumerWidget {
               decoration: BoxDecoration(
                 color: AppColors.dangerLight,
                 borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
-                border: Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
+                border:
+                    Border.all(color: AppColors.danger.withValues(alpha: 0.3)),
               ),
               child: ListTile(
                 leading: Container(
@@ -171,7 +168,8 @@ class ProfileScreen extends ConsumerWidget {
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(8),
                   ),
-                  child: const Icon(Icons.logout, color: AppColors.danger, size: 20),
+                  child: const Icon(Icons.logout,
+                      color: AppColors.danger, size: 20),
                 ),
                 title: const Text(
                   'Logout',
@@ -277,8 +275,8 @@ class _MenuTile extends StatelessWidget {
                 style: const TextStyle(
                     fontSize: 12, color: AppColors.textSecondary))
             : null,
-        trailing:
-            const Icon(Icons.chevron_right, size: 20, color: AppColors.textMuted),
+        trailing: const Icon(Icons.chevron_right,
+            size: 20, color: AppColors.textMuted),
         onTap: onTap,
         shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(AppSpacing.radiusMd)),

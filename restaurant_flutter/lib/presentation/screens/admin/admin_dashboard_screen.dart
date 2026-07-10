@@ -24,7 +24,8 @@ class AdminDashboardScreen extends StatelessWidget {
         backgroundColor: AppColors.background,
         elevation: 0,
         leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new, size: 18, color: AppColors.textPrimary),
+          icon: Icon(Icons.arrow_back_ios_new,
+              size: 18, color: AppColors.textPrimary),
           onPressed: () => Navigator.of(context).maybePop(),
         ),
         title: Text(
@@ -61,7 +62,8 @@ class AdminDashboardScreen extends StatelessWidget {
 
               // ── Brand badge ──
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(100),
@@ -71,7 +73,8 @@ class AdminDashboardScreen extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 2),
                       decoration: BoxDecoration(
                         color: AppColors.primary.withValues(alpha: 0.15),
                         borderRadius: BorderRadius.circular(6),

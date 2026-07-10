@@ -28,7 +28,8 @@ class OrderIdGenerator {
 
     // Random 4-char suffix to prevent collisions
     final rng = Random();
-    final suffix = List.generate(4, (_) => _chars[rng.nextInt(_chars.length)]).join();
+    final suffix =
+        List.generate(4, (_) => _chars[rng.nextInt(_chars.length)]).join();
 
     return 'ORD-$dateStr-$seqStr-$suffix';
   }

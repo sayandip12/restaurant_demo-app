@@ -44,7 +44,6 @@ class ContactScreen extends StatelessWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.s6),
-          
           _ContactCard(
             icon: Icons.phone_outlined,
             title: 'Call Us',
@@ -56,7 +55,8 @@ class ContactScreen extends StatelessWidget {
                 await launchUrl(uri);
               } catch (_) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open dialer')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not open dialer')));
                 }
               }
             },
@@ -73,7 +73,8 @@ class ContactScreen extends StatelessWidget {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               } catch (_) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open WhatsApp')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not open WhatsApp')));
                 }
               }
             },
@@ -90,7 +91,8 @@ class ContactScreen extends StatelessWidget {
                 await launchUrl(uri);
               } catch (_) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open email client')));
+                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+                      content: Text('Could not open email client')));
                 }
               }
             },
@@ -102,12 +104,14 @@ class ContactScreen extends StatelessWidget {
             subtitle: AppStrings.address,
             action: 'Get Directions',
             onTap: () async {
-              final uri = Uri.parse('https://maps.google.com/?q=${Uri.encodeComponent("Rita Foodland, J.N. Colony, Kalyani")}');
+              final uri = Uri.parse(
+                  'https://maps.google.com/?q=${Uri.encodeComponent("Rita Foodland, J.N. Colony, Kalyani")}');
               try {
                 await launchUrl(uri, mode: LaunchMode.externalApplication);
               } catch (_) {
                 if (context.mounted) {
-                  ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Could not open Maps')));
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('Could not open Maps')));
                 }
               }
             },
@@ -159,7 +163,8 @@ class _ContactCard extends StatelessWidget {
           ),
           child: Icon(icon, color: AppColors.primary),
         ),
-        title: Text(title, style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
+        title: Text(title,
+            style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16)),
         subtitle: Padding(
           padding: const EdgeInsets.only(top: 4),
           child: Text(subtitle, style: const TextStyle(height: 1.4)),

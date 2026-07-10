@@ -5,11 +5,31 @@ import '../../../../core/constants/app_spacing.dart';
 import '../../../widgets/shared/shared_widgets.dart';
 
 const _kReviews = [
-  _ReviewData('Priya Sharma', '⭐⭐⭐⭐⭐', 'The chicken biryani here is absolutely divine! Rich flavors, tender meat, and perfectly cooked rice. Will definitely order again!', 'Kalyani'),
-  _ReviewData('Rahul Das', '⭐⭐⭐⭐⭐', 'Best tandoori chicken in Kalyani! The marinade is perfect and the chicken is so juicy. Great value for money.', 'Nadia'),
-  _ReviewData('Anjali Roy', '⭐⭐⭐⭐⭐', 'The momos are incredible! Perfectly steamed with delicious filling. The spicy dipping sauce is addictive.', 'Kalyani'),
-  _ReviewData('Arijit Banerjee', '⭐⭐⭐⭐', 'Fast delivery and hot food! The chicken roll is my weekly go-to. Egg coating is perfect every time.', 'Kalyanivasi'),
-  _ReviewData('Shubha Ghosh', '⭐⭐⭐⭐⭐', 'Paneer butter masala is restaurant-quality at home prices! Family loved the entire thali. Highly recommend!', 'Kalyani'),
+  _ReviewData(
+      'Priya Sharma',
+      '⭐⭐⭐⭐⭐',
+      'The chicken biryani here is absolutely divine! Rich flavors, tender meat, and perfectly cooked rice. Will definitely order again!',
+      'Kalyani'),
+  _ReviewData(
+      'Rahul Das',
+      '⭐⭐⭐⭐⭐',
+      'Best tandoori chicken in Kalyani! The marinade is perfect and the chicken is so juicy. Great value for money.',
+      'Nadia'),
+  _ReviewData(
+      'Anjali Roy',
+      '⭐⭐⭐⭐⭐',
+      'The momos are incredible! Perfectly steamed with delicious filling. The spicy dipping sauce is addictive.',
+      'Kalyani'),
+  _ReviewData(
+      'Arijit Banerjee',
+      '⭐⭐⭐⭐',
+      'Fast delivery and hot food! The chicken roll is my weekly go-to. Egg coating is perfect every time.',
+      'Kalyanivasi'),
+  _ReviewData(
+      'Shubha Ghosh',
+      '⭐⭐⭐⭐⭐',
+      'Paneer butter masala is restaurant-quality at home prices! Family loved the entire thali. Highly recommend!',
+      'Kalyani'),
 ];
 
 class ReviewsSection extends StatelessWidget {
@@ -72,9 +92,15 @@ class _ReviewCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(review.name,
-                        style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 13)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .labelLarge
+                            ?.copyWith(fontSize: 13)),
                     Text(review.location,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(fontSize: 11)),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodySmall
+                            ?.copyWith(fontSize: 11)),
                   ],
                 ),
               ),
@@ -94,7 +120,10 @@ class _ReviewCard extends StatelessWidget {
           ),
         ],
       ),
-    ).animate(delay: Duration(milliseconds: index * 80)).fadeIn().slideX(begin: 0.1);
+    )
+        .animate(delay: Duration(milliseconds: index * 80))
+        .fadeIn()
+        .slideX(begin: 0.1);
   }
 }
 

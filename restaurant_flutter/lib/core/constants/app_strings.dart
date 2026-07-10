@@ -15,6 +15,5 @@ class AppStrings {
       'https://wa.me/917003764902?text=Hi%20Rita%20Foodland%2C%20I%20want%20to%20place%20an%20order';
   static const String openingHours = '12:00 PM – 1:00 AM';
   static const String openingDays = 'Monday – Sunday';
-  static const String supabaseUrl =
-      'https://kdwtmriizdjmgopyfkuw.supabase.co';
+  static const String supabaseUrl = 'https://kdwtmriizdjmgopyfkuw.supabase.co';
 }

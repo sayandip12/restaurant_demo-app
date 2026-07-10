@@ -42,10 +42,10 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       // Already logged in — don't let them go back to login
       if (isLoggedIn && isOnLogin) return '/';
-      
+
       // If we want to protect routes, we can do it here:
       // if (!isLoggedIn && state.matchedLocation == '/profile') return '/login';
-      
+
       return null;
     },
     routes: [
@@ -55,19 +55,23 @@ final routerProvider = Provider<GoRouter>((ref) {
         routes: [
           GoRoute(
             path: '/',
-            pageBuilder: (context, state) => const NoTransitionPage(child: HomeScreen()),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: HomeScreen()),
           ),
           GoRoute(
             path: '/menu',
-            pageBuilder: (context, state) => const NoTransitionPage(child: MenuScreen()),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: MenuScreen()),
           ),
           GoRoute(
             path: '/cart',
-            pageBuilder: (context, state) => const NoTransitionPage(child: CartScreen()),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: CartScreen()),
           ),
           GoRoute(
             path: '/profile',
-            pageBuilder: (context, state) => const NoTransitionPage(child: ProfileScreen()),
+            pageBuilder: (context, state) =>
+                const NoTransitionPage(child: ProfileScreen()),
           ),
         ],
       ),
@@ -121,7 +125,8 @@ final routerProvider = Provider<GoRouter>((ref) {
           children: [
             const Icon(Icons.error_outline, size: 48, color: Colors.red),
             const SizedBox(height: 16),
-            Text('Page not found', style: Theme.of(context).textTheme.titleLarge),
+            Text('Page not found',
+                style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             TextButton(
               onPressed: () => context.go('/'),

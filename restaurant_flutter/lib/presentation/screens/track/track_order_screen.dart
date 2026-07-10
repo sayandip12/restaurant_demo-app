@@ -7,10 +7,14 @@ class TrackOrderScreen extends StatelessWidget {
   const TrackOrderScreen({super.key});
 
   static const _steps = [
-    _StepData(Icons.check_circle, 'Pending', 'Your order has been received', true),
-    _StepData(Icons.thumb_up, 'Accepted', 'Restaurant accepted your order', true),
-    _StepData(Icons.restaurant, 'Preparing', 'Kitchen is preparing your food', true),
-    _StepData(Icons.delivery_dining, 'Out for Delivery', 'Rider is on the way', false),
+    _StepData(
+        Icons.check_circle, 'Pending', 'Your order has been received', true),
+    _StepData(
+        Icons.thumb_up, 'Accepted', 'Restaurant accepted your order', true),
+    _StepData(
+        Icons.restaurant, 'Preparing', 'Kitchen is preparing your food', true),
+    _StepData(Icons.delivery_dining, 'Out for Delivery', 'Rider is on the way',
+        false),
     _StepData(Icons.home, 'Delivered', 'Enjoy your meal!', false),
   ];
 
@@ -56,13 +60,15 @@ class TrackOrderScreen extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Icon(Icons.receipt_long, color: AppColors.primary, size: 18),
+                    const Icon(Icons.receipt_long,
+                        color: AppColors.primary, size: 18),
                     const SizedBox(width: 8),
                     Text('Sample Order Tracking',
                         style: Theme.of(context).textTheme.titleMedium),
                     const Spacer(),
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: AppColors.orange100,
                         borderRadius: BorderRadius.circular(99),
@@ -135,7 +141,10 @@ class TrackOrderScreen extends StatelessWidget {
                         ),
                       ],
                     ),
-                  ).animate(delay: Duration(milliseconds: i * 150)).fadeIn().slideX(begin: 0.1);
+                  )
+                      .animate(delay: Duration(milliseconds: i * 150))
+                      .fadeIn()
+                      .slideX(begin: 0.1);
                 }),
               ],
             ),
@@ -155,7 +164,8 @@ class TrackOrderScreen extends StatelessWidget {
                 Expanded(
                   child: Text(
                     'Our delivery team will call you at your registered number before arriving.',
-                    style: TextStyle(fontSize: 13, color: AppColors.primaryDark),
+                    style:
+                        TextStyle(fontSize: 13, color: AppColors.primaryDark),
                   ),
                 ),
               ],

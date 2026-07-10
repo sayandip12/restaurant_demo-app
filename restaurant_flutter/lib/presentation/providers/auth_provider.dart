@@ -54,9 +54,12 @@ class AuthNotifier extends StateNotifier<AuthState> {
     _client.auth.onAuthStateChange.listen((data) {
       final event = data.event;
       final session = data.session;
-      print('DEBUG_AUTH: onAuthStateChange event=$event, sessionUser=${session?.user.email}');
+      print(
+          'DEBUG_AUTH: onAuthStateChange event=$event, sessionUser=${session?.user.email}');
 
-      if ((event == AuthChangeEvent.signedIn || event == AuthChangeEvent.initialSession) && session != null) {
+      if ((event == AuthChangeEvent.signedIn ||
+              event == AuthChangeEvent.initialSession) &&
+          session != null) {
         state = AuthState(
           status: AuthStatus.authenticated,
           user: session.user,

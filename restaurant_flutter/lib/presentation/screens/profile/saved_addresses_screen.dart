@@ -11,7 +11,8 @@ class SavedAddressesScreen extends ConsumerStatefulWidget {
   const SavedAddressesScreen({super.key});
 
   @override
-  ConsumerState<SavedAddressesScreen> createState() => _SavedAddressesScreenState();
+  ConsumerState<SavedAddressesScreen> createState() =>
+      _SavedAddressesScreenState();
 }
 
 class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
@@ -36,44 +37,58 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
               : ListView.separated(
                   padding: const EdgeInsets.all(AppSpacing.s4),
                   itemCount: addresses.length,
-                  separatorBuilder: (_, __) => const SizedBox(height: AppSpacing.s3),
+                  separatorBuilder: (_, __) =>
+                      const SizedBox(height: AppSpacing.s3),
                   itemBuilder: (context, i) {
                     final addr = addresses[i];
                     return Container(
                       padding: const EdgeInsets.all(AppSpacing.s4),
                       decoration: BoxDecoration(
                         color: AppColors.backgroundSecondary,
-                        borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                        borderRadius:
+                            BorderRadius.circular(AppSpacing.radiusMd),
                         border: Border.all(color: AppColors.borderLight),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Icon(Icons.location_on, color: AppColors.primary, size: 20),
+                          const Icon(Icons.location_on,
+                              color: AppColors.primary, size: 20),
                           const SizedBox(width: AppSpacing.s3),
                           Expanded(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(addr['name'] ?? '',
-                                    style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 14)),
+                                    style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: 14)),
                                 const SizedBox(height: 2),
                                 Text(addr['phone'] ?? '',
-                                    style: const TextStyle(color: AppColors.textSecondary, fontSize: 12)),
+                                    style: const TextStyle(
+                                        color: AppColors.textSecondary,
+                                        fontSize: 12)),
                                 const SizedBox(height: 4),
                                 Text(addr['address'] ?? '',
-                                    style: const TextStyle(fontSize: 13, height: 1.4)),
-                                if (addr['pincode'] != null && addr['pincode']!.isNotEmpty)
+                                    style: const TextStyle(
+                                        fontSize: 13, height: 1.4)),
+                                if (addr['pincode'] != null &&
+                                    addr['pincode']!.isNotEmpty)
                                   Text('Pincode: ${addr['pincode']}',
-                                      style: const TextStyle(fontSize: 13, height: 1.4)),
-                                if (addr['landmark'] != null && addr['landmark']!.isNotEmpty)
+                                      style: const TextStyle(
+                                          fontSize: 13, height: 1.4)),
+                                if (addr['landmark'] != null &&
+                                    addr['landmark']!.isNotEmpty)
                                   Text('Landmark: ${addr['landmark']}',
-                                      style: const TextStyle(fontSize: 12, color: AppColors.textSecondary)),
+                                      style: const TextStyle(
+                                          fontSize: 12,
+                                          color: AppColors.textSecondary)),
                               ],
                             ),
                           ),
                           IconButton(
-                            icon: const Icon(Icons.delete_outline, color: AppColors.danger, size: 20),
+                            icon: const Icon(Icons.delete_outline,
+                                color: AppColors.danger, size: 20),
                             onPressed: () async {
                               final confirm = await showDialog<bool>(
                                 context: context,
@@ -81,15 +96,24 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
                                   title: const Text('Delete Address'),
                                   content: const Text('Are you sure?'),
                                   actions: [
-                                    TextButton(onPressed: () => Navigator.pop(c, false), child: const Text('Cancel')),
-                                    TextButton(onPressed: () => Navigator.pop(c, true), child: const Text('Delete', style: TextStyle(color: AppColors.danger))),
+                                    TextButton(
+                                        onPressed: () =>
+                                            Navigator.pop(c, false),
+                                        child: const Text('Cancel')),
+                                    TextButton(
+                                        onPressed: () => Navigator.pop(c, true),
+                                        child: const Text('Delete',
+                                            style: TextStyle(
+                                                color: AppColors.danger))),
                                   ],
                                 ),
                               );
                               if (confirm == true) {
                                 final addrId = addr['id']?.toString();
                                 if (addrId != null) {
-                                  ref.read(savedAddressesProvider.notifier).removeAddress(addrId);
+                                  ref
+                                      .read(savedAddressesProvider.notifier)
+                                      .removeAddress(addrId);
                                 }
                               }
                             },
@@ -104,7 +128,9 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
               onPressed: () => _showAddAddressDialog(context, ref),
               backgroundColor: AppColors.primary,
               icon: const Icon(Icons.add, color: Colors.white),
-              label: const Text('Add Address', style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600)),
+              label: const Text('Add Address',
+                  style: TextStyle(
+                      color: Colors.white, fontWeight: FontWeight.w600)),
             )
           : null,
     );
@@ -115,11 +141,15 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const Icon(Icons.location_off_outlined, size: 64, color: AppColors.border),
+          const Icon(Icons.location_off_outlined,
+              size: 64, color: AppColors.border),
           const SizedBox(height: AppSpacing.s4),
-          const Text('Login to save addresses', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+          const Text('Login to save addresses',
+              style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           const SizedBox(height: AppSpacing.s4),
-          ElevatedButton(onPressed: () => context.push('/login'), child: const Text('Login')),
+          ElevatedButton(
+              onPressed: () => context.push('/login'),
+              child: const Text('Login')),
         ],
       ),
     );
@@ -132,7 +162,8 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
         children: [
           const Icon(Icons.map_outlined, size: 64, color: AppColors.border),
           const SizedBox(height: AppSpacing.s4),
-          const Text('No addresses saved yet', style: TextStyle(fontSize: 16, color: AppColors.textSecondary)),
+          const Text('No addresses saved yet',
+              style: TextStyle(fontSize: 16, color: AppColors.textSecondary)),
         ],
       ),
     );
@@ -150,7 +181,8 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
       context: context,
       isScrollControlled: true,
       backgroundColor: AppColors.background,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(16))),
       builder: (ctx) => Padding(
         padding: EdgeInsets.only(
           left: AppSpacing.s4,
@@ -165,38 +197,50 @@ class _SavedAddressesScreenState extends ConsumerState<SavedAddressesScreen> {
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text('Add New Address', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
+                const Text('Add New Address',
+                    style:
+                        TextStyle(fontSize: 18, fontWeight: FontWeight.w700)),
                 const SizedBox(height: AppSpacing.s4),
                 TextFormField(
                   controller: nameCtrl,
-                  decoration: const InputDecoration(labelText: 'Name *', prefixIcon: Icon(Icons.person_outline)),
+                  decoration: const InputDecoration(
+                      labelText: 'Name *',
+                      prefixIcon: Icon(Icons.person_outline)),
                   validator: AppValidators.validateName,
                 ),
                 const SizedBox(height: AppSpacing.s3),
                 TextFormField(
                   controller: phoneCtrl,
-                  decoration: const InputDecoration(labelText: 'Phone *', prefixIcon: Icon(Icons.phone_outlined)),
+                  decoration: const InputDecoration(
+                      labelText: 'Phone *',
+                      prefixIcon: Icon(Icons.phone_outlined)),
                   validator: AppValidators.validatePhone,
                   keyboardType: TextInputType.phone,
                 ),
                 const SizedBox(height: AppSpacing.s3),
                 TextFormField(
                   controller: addressCtrl,
-                  decoration: const InputDecoration(labelText: 'Address *', prefixIcon: Icon(Icons.location_on_outlined)),
+                  decoration: const InputDecoration(
+                      labelText: 'Address *',
+                      prefixIcon: Icon(Icons.location_on_outlined)),
                   validator: AppValidators.validateAddress,
                   maxLines: 2,
                 ),
                 const SizedBox(height: AppSpacing.s3),
                 TextFormField(
                   controller: pincodeCtrl,
-                  decoration: const InputDecoration(labelText: 'Pincode *', prefixIcon: Icon(Icons.pin_drop_outlined)),
+                  decoration: const InputDecoration(
+                      labelText: 'Pincode *',
+                      prefixIcon: Icon(Icons.pin_drop_outlined)),
                   validator: AppValidators.validatePincode,
                   keyboardType: TextInputType.number,
                 ),
                 const SizedBox(height: AppSpacing.s3),
                 TextFormField(
                   controller: landmarkCtrl,
-                  decoration: const InputDecoration(labelText: 'Landmark (Optional)', prefixIcon: Icon(Icons.place_outlined)),
+                  decoration: const InputDecoration(
+                      labelText: 'Landmark (Optional)',
+                      prefixIcon: Icon(Icons.place_outlined)),
                 ),
                 const SizedBox(height: AppSpacing.s6),
                 SizedBox(

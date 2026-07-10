@@ -52,7 +52,8 @@ class _PopularCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qty = ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
+    final qty =
+        ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
 
     return Container(
       width: 150,
@@ -67,7 +68,8 @@ class _PopularCard extends ConsumerWidget {
         children: [
           // Image
           ClipRRect(
-            borderRadius: const BorderRadius.vertical(top: Radius.circular(AppSpacing.radiusLg)),
+            borderRadius: const BorderRadius.vertical(
+                top: Radius.circular(AppSpacing.radiusLg)),
             child: Stack(
               children: [
                 MenuItemImage(
@@ -100,7 +102,10 @@ class _PopularCard extends ConsumerWidget {
                 const SizedBox(height: 4),
                 Text(
                   item.name,
-                  style: Theme.of(context).textTheme.labelLarge?.copyWith(fontSize: 12),
+                  style: Theme.of(context)
+                      .textTheme
+                      .labelLarge
+                      ?.copyWith(fontSize: 12),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                 ),
@@ -123,7 +128,8 @@ class _PopularCard extends ConsumerWidget {
                           showAppToast(context, '${item.name} added to cart');
                         },
                         child: Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 8, vertical: 3),
                           decoration: BoxDecoration(
                             color: AppColors.accent,
                             borderRadius: BorderRadius.circular(20),
@@ -139,10 +145,13 @@ class _PopularCard extends ConsumerWidget {
                       QuantityStepper(
                         quantity: qty,
                         size: 22,
-                        onIncrease: () => ref.read(cartProvider.notifier).addItem(item),
+                        onIncrease: () =>
+                            ref.read(cartProvider.notifier).addItem(item),
                         onDecrease: () {
                           final n = qty - 1;
-                          ref.read(cartProvider.notifier).updateQuantity(item.id, n);
+                          ref
+                              .read(cartProvider.notifier)
+                              .updateQuantity(item.id, n);
                         },
                       ),
                   ],
@@ -152,6 +161,9 @@ class _PopularCard extends ConsumerWidget {
           ),
         ],
       ),
-    ).animate(delay: Duration(milliseconds: index * 80)).fadeIn().slideX(begin: 0.1);
+    )
+        .animate(delay: Duration(milliseconds: index * 80))
+        .fadeIn()
+        .slideX(begin: 0.1);
   }
 }

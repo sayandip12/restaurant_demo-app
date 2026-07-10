@@ -15,7 +15,8 @@ class MenuItemCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final qty = ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
+    final qty =
+        ref.watch(cartProvider.select((s) => s.getItemQuantity(item.id)));
 
     return GestureDetector(
       onTap: onTap,
@@ -109,15 +110,16 @@ class MenuItemCard extends ConsumerWidget {
                             onTap: () {
                               HapticFeedback.lightImpact();
                               ref.read(cartProvider.notifier).addItem(item);
-                              showAppToast(context, '${item.name} added to cart');
+                              showAppToast(
+                                  context, '${item.name} added to cart');
                             },
                             child: Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 10, vertical: 4),
                               decoration: BoxDecoration(
                                 color: AppColors.accent,
-                                borderRadius:
-                                    BorderRadius.circular(AppSpacing.radiusFull),
+                                borderRadius: BorderRadius.circular(
+                                    AppSpacing.radiusFull),
                               ),
                               child: const Text(
                                 'ADD',

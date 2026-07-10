@@ -20,7 +20,8 @@ class MenuScreen extends ConsumerStatefulWidget {
   ConsumerState<MenuScreen> createState() => _MenuScreenState();
 }
 
-class _MenuScreenState extends ConsumerState<MenuScreen> with SingleTickerProviderStateMixin {
+class _MenuScreenState extends ConsumerState<MenuScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final _searchController = TextEditingController();
   Timer? _debounce;
@@ -29,7 +30,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> with SingleTickerProvid
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: kMenuCategories.length + 1, vsync: this);
+    _tabController =
+        TabController(length: kMenuCategories.length + 1, vsync: this);
     _tabController.addListener(_onTabChanged);
   }
 
@@ -39,7 +41,9 @@ class _MenuScreenState extends ConsumerState<MenuScreen> with SingleTickerProvid
     if (i == 0) {
       ref.read(menuNotifierProvider.notifier).setCategory(null);
     } else {
-      ref.read(menuNotifierProvider.notifier).setCategory(kMenuCategories[i - 1].id);
+      ref
+          .read(menuNotifierProvider.notifier)
+          .setCategory(kMenuCategories[i - 1].id);
     }
   }
 
@@ -102,7 +106,8 @@ class _MenuScreenState extends ConsumerState<MenuScreen> with SingleTickerProvid
               labelColor: AppColors.primary,
               unselectedLabelColor: AppColors.textSecondary,
               indicatorColor: AppColors.primary,
-              labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+              labelStyle:
+                  const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
               tabs: [
                 const Tab(text: '🍽️ All'),
                 ...kMenuCategories.map((c) => Tab(text: '${c.icon} ${c.name}')),
@@ -196,7 +201,9 @@ class _FloatingCartBar extends StatelessWidget {
               child: Text(
                 '${cartState.totalItems}',
                 style: const TextStyle(
-                    color: AppColors.white, fontSize: 12, fontWeight: FontWeight.w700),
+                    color: AppColors.white,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700),
               ),
             ),
             const SizedBox(width: AppSpacing.s3),

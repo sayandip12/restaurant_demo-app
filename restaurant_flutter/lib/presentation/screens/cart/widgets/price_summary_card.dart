@@ -19,13 +19,11 @@ class PriceSummaryCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('Price Details',
-              style: Theme.of(context).textTheme.titleMedium),
+          Text('Price Details', style: Theme.of(context).textTheme.titleMedium),
           const SizedBox(height: AppSpacing.s3),
           _Row('Item Total', '₹${cartState.subtotal}'),
           const SizedBox(height: AppSpacing.s2),
-          _Row('Delivery Charge', 'FREE',
-              valueColor: AppColors.veg),
+          _Row('Delivery Charge', 'FREE', valueColor: AppColors.veg),
           const SizedBox(height: AppSpacing.s2),
           _Row('GST', 'Incl. in price',
               valueColor: AppColors.textMuted, valueSize: 12),

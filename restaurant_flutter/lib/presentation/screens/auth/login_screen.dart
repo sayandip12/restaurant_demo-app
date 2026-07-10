@@ -60,8 +60,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       print('DEBUG_LOGIN: signIn success=$success');
       final authState = ref.read(authProvider);
       final currentSession = Supabase.instance.client.auth.currentSession;
-      print('DEBUG_LOGIN: After signIn, authState.status=${authState.status}, sessionUser=${currentSession?.user.email}');
-      
+      print(
+          'DEBUG_LOGIN: After signIn, authState.status=${authState.status}, sessionUser=${currentSession?.user.email}');
+
       if (success) {
         final currentSession = Supabase.instance.client.auth.currentSession;
         if (currentSession != null && currentSession.user != null) {
@@ -71,7 +72,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           }
         } else {
           print('DEBUG_LOGIN: session is null after success!');
-          if (mounted) _showSnack('Session could not be established. Please try again.');
+          if (mounted)
+            _showSnack('Session could not be established. Please try again.');
         }
       }
     }
@@ -163,8 +165,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       'Enter your full name',
                       Icons.person_outline,
                     ),
-                    validator: (v) =>
-                        (v == null || v.trim().isEmpty) ? 'Name is required' : null,
+                    validator: (v) => (v == null || v.trim().isEmpty)
+                        ? 'Name is required'
+                        : null,
                   ),
                   const SizedBox(height: AppSpacing.s4),
                 ],
@@ -181,7 +184,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     Icons.email_outlined,
                   ),
                   validator: (v) {
-                    if (v == null || v.trim().isEmpty) return 'Email is required';
+                    if (v == null || v.trim().isEmpty)
+                      return 'Email is required';
                     if (!v.contains('@')) return 'Enter a valid email';
                     return null;
                   },
@@ -214,7 +218,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                   validator: (v) {
                     if (v == null || v.isEmpty) return 'Password is required';
-                    if (v.length < 6) return 'Password must be at least 6 characters';
+                    if (v.length < 6)
+                      return 'Password must be at least 6 characters';
                     return null;
                   },
                 ),

@@ -16,11 +16,11 @@ class ConfirmationView extends StatelessWidget {
   final Order order;
   final VoidCallback onNewOrder;
 
-  const ConfirmationView({super.key, required this.order, required this.onNewOrder});
+  const ConfirmationView(
+      {super.key, required this.order, required this.onNewOrder});
 
   @override
   Widget build(BuildContext context) {
-
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.s4),
       children: [
@@ -34,7 +34,8 @@ class ConfirmationView extends StatelessWidget {
                 color: AppColors.primaryLight,
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.check_circle, color: AppColors.primary, size: 48),
+              child: const Icon(Icons.check_circle,
+                  color: AppColors.primary, size: 48),
             ).animate().scale(duration: 400.ms, curve: Curves.elasticOut),
             const SizedBox(height: AppSpacing.s4),
             Text('Order Placed!',
@@ -78,7 +79,8 @@ class ConfirmationView extends StatelessWidget {
                 ),
               ),
               IconButton(
-                icon: const Icon(Icons.copy, size: 18, color: AppColors.textMuted),
+                icon: const Icon(Icons.copy,
+                    size: 18, color: AppColors.textMuted),
                 onPressed: () {
                   Clipboard.setData(ClipboardData(text: order.id));
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -204,8 +206,10 @@ class _ActionButtons extends StatelessWidget {
             Expanded(
               child: OutlinedButton.icon(
                 onPressed: () async {
-                  if (order.receiptUrl != null && order.receiptUrl!.isNotEmpty) {
-                    await Share.share('Here is my order receipt: ${order.receiptUrl}');
+                  if (order.receiptUrl != null &&
+                      order.receiptUrl!.isNotEmpty) {
+                    await Share.share(
+                        'Here is my order receipt: ${order.receiptUrl}');
                   } else {
                     final bytes = await ReceiptGenerator.generatePdf(order);
                     await Printing.sharePdf(

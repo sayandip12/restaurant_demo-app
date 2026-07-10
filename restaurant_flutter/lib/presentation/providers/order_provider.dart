@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../domain/entities/order.dart';
@@ -11,6 +12,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../core/constants/app_strings.dart';
+
 enum OrderStatus { idle, loading, success, error }
 
 class OrderState {
@@ -52,10 +54,10 @@ class OrderNotifier extends StateNotifier<OrderState> {
     final now = DateTime.now().toUtc();
     final subtotal = items.fold(0, (sum, i) => sum + i.total);
 
-    print('[OrderNotifier] ==========================================');
-    print('[OrderNotifier] Starting order: $orderId');
-    print('[OrderNotifier] Customer: $customerName | Phone: $phone');
-    print('[OrderNotifier] Items: ${items.length} | Total: ₹$subtotal');
+    debugPrint('[OrderNotifier] ==========================================');
+    debugPrint('[OrderNotifier] Starting order: $orderId');
+    debugPrint('[OrderNotifier] Customer: $customerName | Phone: $phone');
+    debugPrint('[OrderNotifier] Items: ${items.length} | Total: ₹$subtotal');
 
     var order = Order(
       id: orderId,
@@ -76,51 +78,55 @@ class OrderNotifier extends StateNotifier<OrderState> {
     String? localPdfPath;
     String? pdfUrl;
     try {
-      print('[OrderNotifier] STEP 1: Generating PDF...');
+      debugPrint('[OrderNotifier] STEP 1: Generating PDF...');
       final pdfBytes = await ReceiptGenerator.generatePdf(order);
-      print('[OrderNotifier] PDF Generated: TRUE. Size: ${pdfBytes.length} bytes');
+      debugPrint(
+          '[OrderNotifier] PDF Generated: TRUE. Size: ${pdfBytes.length} bytes');
 
       // ── STEP 2: Save PDF locally & Upload to Supabase ──────────────────────
-      print('[OrderNotifier] STEP 2: Saving PDF locally and uploading...');
+      debugPrint('[OrderNotifier] STEP 2: Saving PDF locally and uploading...');
       final tempDir = await getTemporaryDirectory();
       localPdfPath = '${tempDir.path}/$orderId.pdf';
       final file = File(localPdfPath);
       await file.writeAsBytes(pdfBytes);
-      
-      print('PDF Path: $localPdfPath');
-      print('PDF Size: ${pdfBytes.length} bytes');
-      print('Bucket: receipts');
+
+      debugPrint('PDF Path: $localPdfPath');
+      debugPrint('PDF Size: ${pdfBytes.length} bytes');
+      debugPrint('Bucket: receipts');
 
       try {
         final uploadResp = await _supabase.storage.from('receipts').upload(
-          'orders/$orderId.pdf',
-          file,
-          fileOptions: const FileOptions(
-            upsert: true,
-            contentType: 'application/pdf',
-          ),
-        );
-        print('Upload Response: $uploadResp');
+              'orders/$orderId.pdf',
+              file,
+              fileOptions: const FileOptions(
+                upsert: true,
+                contentType: 'application/pdf',
+              ),
+            );
+        debugPrint('Upload Response: $uploadResp');
       } catch (uploadErr) {
-        print('Upload Error: $uploadErr');
+        debugPrint('Upload Error: $uploadErr');
       }
 
-      pdfUrl = _supabase.storage.from('receipts').getPublicUrl('orders/$orderId.pdf');
-      print('Public URL: $pdfUrl');
+      pdfUrl = _supabase.storage
+          .from('receipts')
+          .getPublicUrl('orders/$orderId.pdf');
+      debugPrint('Public URL: $pdfUrl');
     } catch (pdfErr) {
-      print('[OrderNotifier] !! PDF GENERATION/UPLOAD FAILED !!');
-      print('[OrderNotifier] Error: $pdfErr');
+      debugPrint('[OrderNotifier] !! PDF GENERATION/UPLOAD FAILED !!');
+      debugPrint('[OrderNotifier] Error: $pdfErr');
     }
 
     // ── STEP 3: Insert into DB ────────────────────────────────────────────
     try {
-      print('[OrderNotifier] STEP 3: Inserting into Supabase DB...');
+      debugPrint('[OrderNotifier] STEP 3: Inserting into Supabase DB...');
       final userId = _supabase.auth.currentUser?.id;
       final Map<String, dynamic> payload = {
         'order_number': order.id,
         'customer_name': order.customerName,
         'phone': order.phone,
-        'address': '${order.address}${order.pincode.isNotEmpty ? ', PIN: ${order.pincode}' : ''}',
+        'address':
+            '${order.address}${order.pincode.isNotEmpty ? ', PIN: ${order.pincode}' : ''}',
         'landmark': order.landmark,
         'notes': order.notes,
         'items': order.items.map((e) => e.toJson()).toList(),
@@ -134,15 +140,15 @@ class OrderNotifier extends StateNotifier<OrderState> {
       }
 
       await _supabase.from('orders').insert(payload);
-      print('[OrderNotifier] DB Insert: SUCCESS | Order: $orderId');
+      debugPrint('[OrderNotifier] DB Insert: SUCCESS | Order: $orderId');
     } catch (dbErr) {
-      print('[OrderNotifier] !! DB INSERT FAILED !!');
-      print('[OrderNotifier] Error: $dbErr');
+      debugPrint('[OrderNotifier] !! DB INSERT FAILED !!');
+      debugPrint('[OrderNotifier] Error: $dbErr');
     }
 
     // ── STEP 4: Share PDF URL to WhatsApp ─────────────────────────────────────
     try {
-      print('[OrderNotifier] STEP 4: Opening Share flow...');
+      debugPrint('[OrderNotifier] STEP 4: Opening Share flow...');
       var msg = '🛒 *NEW ORDER*\n\n'
           'Order: ${order.id}\n'
           'Customer: ${order.customerName}\n'
@@ -169,9 +175,9 @@ class OrderNotifier extends StateNotifier<OrderState> {
           await Share.share(msg);
         }
       }
-      print('[OrderNotifier] Share flow opened successfully.');
+      debugPrint('[OrderNotifier] Share flow opened successfully.');
     } catch (waErr) {
-      print('[OrderNotifier] Share launch failed: $waErr');
+      debugPrint('[OrderNotifier] Share launch failed: $waErr');
     }
 
     // ── STEP 5: Save locally for Order History ────────────────────────────
@@ -179,22 +185,22 @@ class OrderNotifier extends StateNotifier<OrderState> {
       final prefs = await SharedPreferences.getInstance();
       final historyStr = prefs.getString('local_order_history');
       List<dynamic> history = historyStr != null ? jsonDecode(historyStr) : [];
-      
+
       final orderJson = order.toJson();
       if (localPdfPath != null) {
         orderJson['local_pdf_path'] = localPdfPath;
       }
-      
+
       history.insert(0, orderJson);
       if (history.length > 7) {
         history = history.sublist(0, 7);
       }
       await prefs.setString('local_order_history', jsonEncode(history));
     } catch (e) {
-      print('[OrderNotifier] Failed to save local order history: $e');
+      debugPrint('[OrderNotifier] Failed to save local order history: $e');
     }
 
-    print('[OrderNotifier] ==========================================');
+    debugPrint('[OrderNotifier] ==========================================');
     state = state.copyWith(status: OrderStatus.success, order: order);
     return true;
   }
@@ -216,10 +222,11 @@ final orderByIdProvider =
         .select()
         .eq('order_number', orderId)
         .single();
-    print('[orderByIdProvider] Loaded: $orderId | receipt_url: ${data['receipt_url']}');
+    debugPrint(
+        '[orderByIdProvider] Loaded: $orderId | receipt_url: ${data['receipt_url']}');
     return Order.fromSupabase(data);
   } catch (e) {
-    print('[orderByIdProvider] Failed to load $orderId: $e');
+    debugPrint('[orderByIdProvider] Failed to load $orderId: $e');
     return null;
   }
 });
@@ -229,7 +236,7 @@ final myOrdersProvider = FutureProvider<List<Order>>((ref) async {
   try {
     final userId = Supabase.instance.client.auth.currentUser?.id;
     if (userId == null) {
-      print('[myOrdersProvider] No authenticated user.');
+      debugPrint('[myOrdersProvider] No authenticated user.');
       return [];
     }
     final thirtyDaysAgo =
@@ -241,10 +248,11 @@ final myOrdersProvider = FutureProvider<List<Order>>((ref) async {
         .gte('created_at', thirtyDaysAgo)
         .order('created_at', ascending: false)
         .limit(7);
-    print('[myOrdersProvider] Found ${(data as List).length} orders for user $userId');
-    return (data).map((row) => Order.fromSupabase(row as Map<String, dynamic>)).toList();
+    debugPrint(
+        '[myOrdersProvider] Found ${(data as List).length} orders for user $userId');
+    return (data).map((row) => Order.fromSupabase(row)).toList();
   } catch (e) {
-    print('[myOrdersProvider] Error: $e');
+    debugPrint('[myOrdersProvider] Error: $e');
     return [];
   }
 });
@@ -261,7 +269,7 @@ final allOrdersProvider = FutureProvider<List<Order>>((ref) async {
         .map((row) => Order.fromSupabase(row as Map<String, dynamic>))
         .toList();
   } catch (e) {
-    print('[allOrdersProvider] Error: $e');
+    debugPrint('[allOrdersProvider] Error: $e');
     return [];
   }
 });
