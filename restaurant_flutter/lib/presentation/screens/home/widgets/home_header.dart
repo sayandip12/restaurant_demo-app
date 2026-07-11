@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
@@ -19,8 +20,31 @@ class HomeHeader extends StatelessWidget {
       ),
       title: Row(
         children: [
-          Image.asset('assets/images/logo.png',
-              height: 32, fit: BoxFit.contain),
+          StatefulBuilder(
+            builder: (context, setState) {
+              int tapCount = 0;
+              Timer? resetTimer;
+              return GestureDetector(
+                onTap: () {
+                  tapCount++;
+                  resetTimer?.cancel();
+                  resetTimer = Timer(const Duration(seconds: 5), () {
+                    tapCount = 0;
+                  });
+                  if (tapCount == 7) {
+                    tapCount = 0;
+                    resetTimer?.cancel();
+                    _showSecretPinDialog(context);
+                  } else if (tapCount > 7) {
+                    tapCount = 0;
+                    resetTimer?.cancel();
+                  }
+                },
+                child: Image.asset('assets/images/logo.png',
+                    height: 32, fit: BoxFit.contain),
+              );
+            },
+          ),
           const SizedBox(width: 8),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,4 +99,44 @@ class HomeHeader extends StatelessWidget {
       ],
     );
   }
+}
+
+void _showSecretPinDialog(BuildContext context) {
+  final TextEditingController pinController = TextEditingController();
+  showDialog(
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        title: const Text('Admin Access'),
+        content: TextField(
+          controller: pinController,
+          obscureText: true,
+          decoration: const InputDecoration(
+            hintText: 'Enter Secret PIN',
+          ),
+          keyboardType: TextInputType.number,
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              if (pinController.text == '1971') {
+                Navigator.pop(context);
+                context.push('/admin-login');
+              } else {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Access Denied')),
+                );
+                Navigator.pop(context);
+              }
+            },
+            child: const Text('Enter'),
+          ),
+        ],
+      );
+    },
+  );
 }

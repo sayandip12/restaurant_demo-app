@@ -10,6 +10,7 @@ import '../../presentation/screens/profile/my_orders_screen.dart';
 import '../../presentation/screens/profile/saved_addresses_screen.dart';
 import '../../presentation/screens/offers/offers_screen.dart';
 import '../../presentation/screens/admin/admin_dashboard_screen.dart';
+import '../../presentation/screens/admin/admin_login_screen.dart';
 
 import '../../presentation/screens/contact/contact_screen.dart';
 import '../../presentation/screens/privacy/privacy_policy_screen.dart';
@@ -106,6 +107,10 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: '/admin',
         builder: (context, state) => const AdminDashboardScreen(),
+      ),
+      GoRoute(
+        path: '/admin-login',
+        builder: (context, state) => const AdminLoginScreen(),
       ),
 
       GoRoute(

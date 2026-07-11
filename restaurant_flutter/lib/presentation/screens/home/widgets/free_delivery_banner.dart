@@ -30,7 +30,7 @@ class FreeDeliveryBanner extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           // Scooter left
-          const Icon(Icons.moped, color: AppColors.primary, size: 40),
+          Image.asset('assets/images/delivery_bike.png', height: 48),
           // Text center
           Expanded(
             child: Padding(
@@ -61,7 +61,7 @@ class FreeDeliveryBanner extends StatelessWidget {
           // Scooter right (flipped)
           Transform.flip(
             flipX: true,
-            child: const Icon(Icons.moped, color: AppColors.primary, size: 40),
+            child: Image.asset('assets/images/delivery_bike.png', height: 48),
           ),
         ],
       ),

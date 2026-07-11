@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../core/constants/app_spacing.dart';
 import '../../../../core/constants/app_strings.dart';
+import '../../../providers/menu_provider.dart';
 
-class FooterInfo extends StatelessWidget {
+class FooterInfo extends ConsumerWidget {
   const FooterInfo({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final settings = ref.watch(restaurantSettingsProvider);
+
     return Container(
       margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
@@ -35,15 +39,15 @@ class FooterInfo extends StatelessWidget {
           ),
           const SizedBox(height: 6),
           Row(
-            children: const [
-              Icon(Icons.schedule_outlined, color: Colors.black87, size: 16),
-              SizedBox(width: 8),
+            children: [
+              const Icon(Icons.schedule_outlined, color: Colors.black87, size: 16),
+              const SizedBox(width: 8),
               Text('Monday - Sunday | ',
                   style: TextStyle(
                       fontSize: 12,
                       color: Colors.black87,
                       fontWeight: FontWeight.w600)),
-              Text('09:00 AM - 11:00 PM',
+              Text('${settings.openingTime} - ${settings.closingTime}',
                   style: TextStyle(
                       fontSize: 12,
                       color: AppColors.accent,

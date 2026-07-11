@@ -28,7 +28,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
   bool _isRestaurantOpen() {
     final now = DateTime.now();
     final h = now.hour;
-    // Open from 11:00 AM (hour 11) to 1:00 AM (hour 0)
+    // Open from 11:00 AM (hour 11) to 12:00 AM (hour 0)
     return (h >= 11 || h == 0);
   }
 
@@ -152,7 +152,7 @@ class _CartScreenState extends ConsumerState<CartScreen> {
             onSubmit: _placeOrder,
             // TODO: Re-enable restaurant hours before production launch
             // Open: 11:00 AM
-            // Close: 1:00 AM
+            // Close: 12:00 AM
             isOpen: true, // _isRestaurantOpen(),
           );
         }
@@ -293,7 +293,7 @@ class _CheckoutStep extends StatelessWidget {
                 SizedBox(width: AppSpacing.s3),
                 Expanded(
                   child: Text(
-                    'Restaurant is currently closed.\nOrders are accepted from 11:00 AM to 1:00 AM.',
+                    'Restaurant is currently closed.\nOrders are accepted from 12:00 PM to 12:00 AM.',
                     style: TextStyle(
                         color: AppColors.danger,
                         fontWeight: FontWeight.w600,

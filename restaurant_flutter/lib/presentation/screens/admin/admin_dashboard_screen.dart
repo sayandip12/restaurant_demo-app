@@ -1,217 +1,369 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
+import '../../providers/menu_provider.dart';
+import 'admin_food_form_screen.dart';
 
-/// Admin Dashboard — Coming Soon placeholder.
-/// The real admin system has not been built yet.
-/// Customers cannot access real order data or internal tools from here.
-class AdminDashboardScreen extends StatelessWidget {
+class AdminDashboardScreen extends ConsumerStatefulWidget {
   const AdminDashboardScreen({super.key});
 
-  Future<void> _callOwner() async {
-    final uri = Uri.parse('tel:+917003764902');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
+  @override
+  ConsumerState<AdminDashboardScreen> createState() => _AdminDashboardScreenState();
+}
+
+class _AdminDashboardScreenState extends ConsumerState<AdminDashboardScreen> {
+  bool _isLoading = false;
+  
+  void _setLoading(bool value) {
+    if (mounted) setState(() => _isLoading = value);
+  }
+
+  void _showError(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.red));
+  }
+  
+  void _showSuccess(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(message), backgroundColor: Colors.green));
+  }
+
+  Future<void> _toggleRestaurantStatus(bool currentStatus) async {
+    if (_isLoading) return;
+    _setLoading(true);
+    try {
+      final client = Supabase.instance.client;
+      final data = await client.from('restaurant_settings').select('id').eq('id', 1).maybeSingle().timeout(const Duration(seconds: 10));
+      
+      if (data == null) {
+        await client.from('restaurant_settings').insert({
+          'id': 1,
+          'is_open': !currentStatus,
+          'opening_time': '12:00 PM',
+          'closing_time': '12:00 AM',
+        }).timeout(const Duration(seconds: 10));
+      } else {
+        await client.from('restaurant_settings').update({
+          'is_open': !currentStatus
+        }).eq('id', 1).timeout(const Duration(seconds: 10));
+      }
+      
+      if (!mounted) return;
+      _showSuccess('Restaurant status updated');
+    } on PostgrestException catch (e) {
+      if (!mounted) return;
+      if (e.code == '42501' || e.message.toLowerCase().contains('policy')) {
+        _showError('Permission denied: Administrator privileges required.');
+      } else {
+        _showError('Database error: ${e.message}');
+      }
+    } on TimeoutException {
+      if (!mounted) return;
+      _showError('Network timeout. Please check your connection.');
+    } catch (e) {
+      if (!mounted) return;
+      _showError('Failed to update status: $e');
+    } finally {
+      _setLoading(false);
     }
+  }
+  
+  Future<void> _toggleStock(String id, bool currentStock) async {
+    if (_isLoading) return;
+    _setLoading(true);
+    try {
+      await Supabase.instance.client
+          .from('menu_items')
+          .update({'is_available': !currentStock})
+          .eq('id', id)
+          .timeout(const Duration(seconds: 10));
+      if (!mounted) return;
+      _showSuccess('Stock status updated');
+    } on PostgrestException catch (e) {
+      if (!mounted) return;
+      if (e.code == '42501' || e.message.toLowerCase().contains('policy')) {
+        _showError('Permission denied: Administrator privileges required.');
+      } else {
+        _showError('Database error: ${e.message}');
+      }
+    } on TimeoutException {
+      if (!mounted) return;
+      _showError('Network timeout. Please check your connection.');
+    } catch (e) {
+      if (!mounted) return;
+      _showError('Failed to update stock: $e');
+    } finally {
+      _setLoading(false);
+    }
+  }
+
+  void _confirmDelete(String id, String name) {
+    if (_isLoading) return;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Delete Food?'),
+        content: Text('Are you sure you want to delete $name?'),
+        actions: [
+          TextButton(onPressed: () => Navigator.pop(context), child: const Text('CANCEL')),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context);
+              _setLoading(true);
+              try {
+                await Supabase.instance.client
+                    .from('menu_items')
+                    .update({'is_deleted': true, 'is_available': false})
+                    .eq('id', id)
+                    .timeout(const Duration(seconds: 10));
+                if (!mounted) return;
+                _showSuccess('Food deleted successfully');
+              } on PostgrestException catch (e) {
+                if (!mounted) return;
+                if (e.code == '42501' || e.message.toLowerCase().contains('policy')) {
+                  _showError('Permission denied: Administrator privileges required.');
+                } else {
+                  _showError('Database error: ${e.message}');
+                }
+              } on TimeoutException {
+                if (!mounted) return;
+                _showError('Network timeout. Please check your connection.');
+              } catch (e) {
+                if (!mounted) return;
+                _showError('Failed to delete food: $e');
+              } finally {
+                _setLoading(false);
+              }
+            },
+            child: const Text('DELETE', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final categories = ref.watch(categoriesProvider);
+    final settings = ref.watch(restaurantSettingsProvider);
+    final isRestaurantOpen = settings.isOpen;
+    
+    // Flatten all items from all categories
+    final allFoods = categories.expand((c) => c.items).toList();
+
     return Scaffold(
       backgroundColor: AppColors.background,
       appBar: AppBar(
+        title: const Text('Admin Dashboard', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 22)),
         backgroundColor: AppColors.background,
         elevation: 0,
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back_ios_new,
-              size: 18, color: AppColors.textPrimary),
-          onPressed: () => Navigator.of(context).maybePop(),
-        ),
-        title: Text(
-          'Admin',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontWeight: FontWeight.w700,
-            fontSize: 17,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.logout, color: Colors.red),
+            onPressed: () => context.go('/'),
           ),
-        ),
+        ],
       ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(AppSpacing.s6),
-          child: Column(
+      body: Stack(
+        children: [
+          Column(
             children: [
-              const SizedBox(height: AppSpacing.s8),
-
-              // ── Lock icon ──
+              // Restaurant Status Card
               Container(
-                width: 88,
-                height: 88,
-                decoration: BoxDecoration(
-                  color: AppColors.accent.withValues(alpha: 0.12),
-                  shape: BoxShape.circle,
-                ),
-                child: Icon(
-                  Icons.lock_outline_rounded,
-                  size: 42,
-                  color: AppColors.accent,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s6),
-
-              // ── Brand badge ──
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                margin: const EdgeInsets.all(AppSpacing.s4),
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s6, vertical: AppSpacing.s4),
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(100),
-                  border: Border.all(color: AppColors.borderLight),
+                  borderRadius: BorderRadius.circular(AppSpacing.radiusLg),
+                  border: Border.all(color: isRestaurantOpen ? Colors.green : Colors.red, width: 2),
                 ),
                 child: Row(
-                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 8, vertical: 2),
-                      decoration: BoxDecoration(
-                        color: AppColors.primary.withValues(alpha: 0.15),
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        'RF',
-                        style: TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 12,
-                        ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            isRestaurantOpen ? 'Restaurant is OPEN' : 'Restaurant is CLOSED',
+                            style: TextStyle(
+                              fontSize: 22,
+                              fontWeight: FontWeight.bold,
+                              color: isRestaurantOpen ? Colors.green : Colors.red,
+                            ),
+                          ),
+                          const Text(
+                            'Toggle to change status',
+                            style: TextStyle(fontSize: 14, color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ),
-                    const SizedBox(width: 8),
-                    Text(
-                      'Rita Foodland',
-                      style: TextStyle(
-                        color: AppColors.textSecondary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13,
+                    Transform.scale(
+                      scale: 1.5,
+                      child: Switch(
+                        value: isRestaurantOpen,
+                        activeColor: Colors.green,
+                        onChanged: _isLoading ? null : (val) => _toggleRestaurantStatus(isRestaurantOpen),
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: AppSpacing.s6),
 
-              // ── Title ──
-              Text(
-                'Admin Dashboard',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.w800,
-                  fontSize: 26,
-                ),
-              ),
-              const SizedBox(height: 6),
-
-              // ── Coming Soon badge ──
-              Text(
-                'Coming Soon',
-                style: TextStyle(
-                  color: AppColors.accent,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 20,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s4),
-
-              // ── Description ──
-              Text(
-                'The restaurant management dashboard is currently under development. Please contact the restaurant owner for order assistance.',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
-                  height: 1.6,
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.s8),
-              const Divider(),
-              const SizedBox(height: AppSpacing.s6),
-
-              // ── Planned features label ──
-              Text(
-                'PLANNED FEATURES',
-                style: TextStyle(
-                  color: AppColors.textSecondary.withValues(alpha: 0.6),
-                  fontWeight: FontWeight.w700,
-                  fontSize: 11,
-                  letterSpacing: 1.2,
-                ),
-              ),
-              const SizedBox(height: AppSpacing.s4),
-
-              // ── Feature list ──
-              ...[
-                'Order Management & Status Tracking',
-                'Real-Time Order Dashboard',
-                'Customer Management',
-                'Sales Analytics',
-                'Menu Management',
-              ].map(
-                (feature) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 6),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 6,
-                        height: 6,
-                        decoration: BoxDecoration(
-                          color: AppColors.primary,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                      const SizedBox(width: 12),
-                      Text(
-                        feature,
-                        style: TextStyle(
-                          color: AppColors.textSecondary,
-                          fontSize: 14,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
-              const SizedBox(height: AppSpacing.s8),
-
-              // ── Contact CTA ──
-              SizedBox(
-                width: double.infinity,
+              // Add Food Button
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4),
                 child: ElevatedButton.icon(
-                  onPressed: _callOwner,
-                  icon: const Icon(Icons.phone_outlined, size: 18),
-                  label: const Text('Contact Restaurant Owner'),
+                  onPressed: _isLoading
+                      ? null
+                      : () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const AdminFoodFormScreen()));
+                        },
+                  icon: const Icon(Icons.add, size: 28),
+                  label: const Text('ADD NEW FOOD', style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
                   style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(vertical: 16),
                     backgroundColor: AppColors.primary,
                     foregroundColor: Colors.white,
-                    padding: const EdgeInsets.symmetric(vertical: 16),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(100),
-                    ),
-                    textStyle: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 15,
-                    ),
+                    minimumSize: const Size(double.infinity, 60),
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
                   ),
                 ),
               ),
+              const SizedBox(height: AppSpacing.s4),
 
-              const SizedBox(height: AppSpacing.s6),
+              // Food List Header
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: AppSpacing.s4),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text('Menu Items', style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold)),
+                ),
+              ),
+              const SizedBox(height: AppSpacing.s2),
+
+              // Food List
+              Expanded(
+                child: allFoods.isEmpty
+                    ? const Center(
+                        child: Text(
+                          'No menu items found.',
+                          style: TextStyle(fontSize: 18, color: Colors.grey),
+                        ),
+                      )
+                    : ListView.builder(
+                        padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s4, vertical: AppSpacing.s2),
+                        itemCount: allFoods.length,
+                        itemBuilder: (context, index) {
+                          final food = allFoods[index];
+                    return Card(
+                      margin: const EdgeInsets.only(bottom: AppSpacing.s4),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppSpacing.radiusLg)),
+                      elevation: 2,
+                      child: Padding(
+                        padding: const EdgeInsets.all(AppSpacing.s4),
+                        child: Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  width: 80,
+                                  height: 80,
+                                  decoration: BoxDecoration(
+                                    color: Colors.grey.shade200,
+                                    borderRadius: BorderRadius.circular(AppSpacing.radiusMd),
+                                    image: food.image.isNotEmpty
+                                        ? DecorationImage(
+                                            image: food.isAsset 
+                                                ? AssetImage(food.image) as ImageProvider 
+                                                : CachedNetworkImageProvider(food.image),
+                                            fit: BoxFit.cover,
+                                          )
+                                        : null,
+                                  ),
+                                  child: food.image.isEmpty ? const Icon(Icons.fastfood, size: 40, color: Colors.grey) : null,
+                                ),
+                                const SizedBox(width: AppSpacing.s4),
+                                Expanded(
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(food.name, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                                      const SizedBox(height: 4),
+                                      Text(
+                                        'Half: ₹${food.price} | Full: ${food.priceL != null ? '₹${food.priceL}' : 'N/A'}',
+                                        style: const TextStyle(fontSize: 16, color: Colors.black87),
+                                      ),
+                                      const SizedBox(height: 4),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Text(
+                                            food.available ? 'In Stock' : 'Out of Stock',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: food.available ? Colors.green : Colors.red,
+                                            ),
+                                          ),
+                                          Switch(
+                                            value: food.available,
+                                            activeColor: Colors.green,
+                                            onChanged: _isLoading ? null : (val) => _toggleStock(food.id, food.available),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const Divider(height: 12),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                              children: [
+                                TextButton.icon(
+                                  onPressed: _isLoading
+                                      ? null
+                                      : () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(builder: (_) => AdminFoodFormScreen(foodItem: food)),
+                                          );
+                                        },
+                                  icon: const Icon(Icons.edit, size: 24, color: Colors.blue),
+                                  label: const Text('EDIT', style: TextStyle(fontSize: 18, color: Colors.blue)),
+                                ),
+                                Container(width: 1, height: 30, color: Colors.grey.shade300),
+                                TextButton.icon(
+                                  onPressed: _isLoading ? null : () => _confirmDelete(food.id, food.name),
+                                  icon: const Icon(Icons.delete, size: 24, color: Colors.red),
+                                  label: const Text('DELETE', style: TextStyle(fontSize: 18, color: Colors.red)),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ),
             ],
           ),
-        ),
+          if (_isLoading)
+            Container(
+              color: Colors.black.withOpacity(0.3),
+              child: const Center(child: CircularProgressIndicator()),
+            ),
+        ],
       ),
     );
   }

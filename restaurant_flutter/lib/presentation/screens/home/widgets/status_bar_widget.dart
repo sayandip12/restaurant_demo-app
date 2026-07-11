@@ -43,7 +43,7 @@ class StatusBarWidget extends StatelessWidget {
             children: const [
               Icon(Icons.schedule, size: 14, color: Colors.black54),
               SizedBox(width: 4),
-              Text('12:00 PM – 1:00 AM',
+              Text('12:00 PM – 12:00 AM',
                   style: TextStyle(
                       fontSize: 12,
                       color: Colors.black87,

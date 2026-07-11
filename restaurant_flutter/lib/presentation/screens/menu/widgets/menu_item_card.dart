@@ -105,7 +105,16 @@ class MenuItemCard extends ConsumerWidget {
                               ),
                           ],
                         ),
-                        if (qty == 0)
+                        if (!item.available)
+                          const Text(
+                            'Out of Stock',
+                            style: TextStyle(
+                              color: Colors.red,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          )
+                        else if (qty == 0)
                           GestureDetector(
                             onTap: () {
                               HapticFeedback.lightImpact();

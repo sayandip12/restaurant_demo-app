@@ -59,6 +59,7 @@ dependencies:
   intl: ^0.20.2
   flutter_native_splash: ^2.4.7
   path_provider: ^2.1.6
+  image_picker: ^1.2.3
 
 dev_dependencies:
   flutter_test:

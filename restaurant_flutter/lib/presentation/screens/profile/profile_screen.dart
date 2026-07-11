@@ -138,12 +138,7 @@ class ProfileScreen extends ConsumerWidget {
             subtitle: 'Contact us for any issues',
             onTap: () => context.push('/contact'),
           ),
-          _MenuTile(
-            icon: Icons.admin_panel_settings_outlined,
-            title: 'Restaurant Admin',
-            subtitle: 'Manage orders (Staff only)',
-            onTap: () => context.push('/admin'),
-          ),
+
           _MenuTile(
             icon: Icons.privacy_tip_outlined,
             title: 'Privacy Policy',
