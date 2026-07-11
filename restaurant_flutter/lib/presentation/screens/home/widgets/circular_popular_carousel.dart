@@ -6,7 +6,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 import '../../../../domain/entities/menu_item.dart';
 import '../../../providers/cart_provider.dart';
-import '../../../providers/menu_provider.dart';
 import '../../menu/widgets/menu_item_detail_sheet.dart';
 
 import '../../../../data/static/menu_data.dart';
@@ -37,6 +36,7 @@ class _CircularPopularCarouselState
   List<MenuItem> _items = [];
   int _currentIndex = 0;
   Timer? _timer;
+  Timer? _pauseTimer;
 
   @override
   void initState() {
@@ -61,8 +61,6 @@ class _CircularPopularCarouselState
       _items = _items.toSet().toList();
     }
   }
-
-  Timer? _pauseTimer;
 
   @override
   void dispose() {
@@ -112,6 +110,8 @@ class _CircularPopularCarouselState
   Widget build(BuildContext context) {
     if (_items.isEmpty) return const SizedBox.shrink();
 
+    final screenWidth = MediaQuery.of(context).size.width;
+
     return Column(
       children: [
         // Header
@@ -150,8 +150,8 @@ class _CircularPopularCarouselState
             ],
           ),
         ),
-        const SizedBox(height: 24),
-        // Carousel Area
+        const SizedBox(height: 16),
+        // Carousel + Info Card stacked inside a clipped container
         GestureDetector(
           onHorizontalDragEnd: (details) {
             if (details.primaryVelocity! < 0) {
@@ -160,145 +160,156 @@ class _CircularPopularCarouselState
               _handleSwipe(false); // Swipe right -> Previous
             }
           },
-          child: SizedBox(
-            height: 240,
+          child: Container(
+            height: 300,
+            width: double.infinity,
+            clipBehavior: Clip.hardEdge,
+            decoration: const BoxDecoration(),
             child: Stack(
-              alignment: Alignment.center,
+              alignment: Alignment.topCenter,
               clipBehavior: Clip.none,
               children: [
-                // Items
-                ...List.generate(_items.length, (index) {
-                  // Wrap diff
-                  int diff = index - _currentIndex;
-                  int halfLen = _items.length ~/ 2;
-                  if (diff < -halfLen) diff += _items.length;
-                  if (diff > _items.length - halfLen - 1) diff -= _items.length;
-
-                  // Calculate properties based on position (diff)
-                  // -3 = left entering/exiting, 0 = center, 3 = right entering/exiting
-
-                  double angle = (pi / 2) - (diff * (pi / 5.5));
-                  const double radius = 220.0;
-
-                  final double x = cos(angle) * radius;
-                  final double y = -sin(angle) * radius;
-
-                  double scale = 0.0;
-                  double opacity = 0.0;
-                  bool isVisible = false;
-
-                  if (diff == 0) {
-                    scale = 1.0;
-                    opacity = 1.0;
-                    isVisible = true;
-                  } else if (diff.abs() == 1) {
-                    scale = 0.65;
-                    opacity = 0.9;
-                    isVisible = true;
-                  } else if (diff.abs() == 2) {
-                    scale = 0.45;
-                    opacity = 0.6;
-                    isVisible = true;
-                  } else if (diff.abs() == 3) {
-                    scale = 0.25;
-                    opacity = 0.0;
-                    isVisible = true;
-                  }
-
-                  const double baseSize = 160.0;
-                  final double centerY = 90.0 + radius;
-
-                  return AnimatedPositioned(
-                    key: ValueKey(_items[index].id),
-                    duration: const Duration(milliseconds: 600),
-                    curve: Curves.easeInOut,
-                    left: MediaQuery.of(context).size.width / 2 -
-                        (baseSize / 2) +
-                        x,
-                    top: centerY + y - (baseSize / 2),
-                    child: IgnorePointer(
-                      ignoring: !isVisible,
-                      child: AnimatedOpacity(
-                        duration: const Duration(milliseconds: 600),
-                        curve: Curves.easeInOut,
-                        opacity: opacity,
-                        child: AnimatedScale(
-                          scale: scale,
-                          duration: const Duration(milliseconds: 600),
-                          curve: Curves.easeInOut,
-                          child: GestureDetector(
-                            onTap: () => _onItemTapped(index),
-                            child: Container(
-                              width: baseSize,
-                              height: baseSize,
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                boxShadow: diff == 0
-                                    ? [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.2),
-                                          blurRadius: 20,
-                                          spreadRadius: 2,
-                                          offset: const Offset(0, 10),
-                                        )
-                                      ]
-                                    : [
-                                        BoxShadow(
-                                          color: Colors.black.withOpacity(0.1),
-                                          blurRadius: 8,
-                                          offset: const Offset(0, 4),
-                                        )
-                                      ],
-                              ),
-                              child: ClipOval(
-                                child: Container(
-                                  color: Colors.white,
-                                  padding: EdgeInsets.all(diff == 0 ? 6 : 4),
-                                  child: ClipOval(
-                                    child: Image.asset(
-                                      _popularImages[_items[index].name] ??
-                                          _items[index].image,
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                  );
-                })
-                  // Re-order children based on absolute diff to bring center item to top
-                  ..sort((a, b) {
-                    int getDiff(Key? key) {
-                      if (key == null) return 100;
-                      final id = (key as ValueKey).value as String;
-                      int idx = _items.indexWhere((item) => item.id == id);
-                      int diff = idx - _currentIndex;
-                      int halfLen = _items.length ~/ 2;
-                      if (diff < -halfLen) diff += _items.length;
-                      if (diff > _items.length - halfLen - 1)
-                        diff -= _items.length;
-                      return diff.abs();
-                    }
-
-                    // We want smaller diff to be drawn LAST (highest Z-index)
-                    return getDiff(b.key).compareTo(getDiff(a.key));
-                  }),
+                // Render dishes
+                ..._buildDishes(screenWidth),
+                // Bottom Info Card (placed on top of the dishes)
+                Positioned(
+                  bottom: 0,
+                  left: 16,
+                  right: 16,
+                  child: _buildInfoCard(_items[_currentIndex]),
+                ),
               ],
             ),
           ),
         ),
-        // Info Card for Center Item
-        const SizedBox(height: 10),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16),
-          child: _buildInfoCard(_items[_currentIndex]),
-        ),
       ],
     );
+  }
+
+  List<Widget> _buildDishes(double screenWidth) {
+    final List<Widget> list = [];
+
+    for (int index = 0; index < _items.length; index++) {
+      // Wrap diff
+      int diff = index - _currentIndex;
+      int halfLen = _items.length ~/ 2;
+      if (diff < -halfLen) diff += _items.length;
+      if (diff > _items.length - halfLen - 1) diff -= _items.length;
+
+      // Only show visible slots (from -3 to +3)
+      if (diff.abs() > 3) continue;
+
+      double angle = (pi / 2) - (diff * (pi / 5.0));
+      const double radius = 200.0;
+      final double centerY = 80.0 + radius;
+
+      final double x = cos(angle) * radius;
+      final double y = -sin(angle) * radius;
+
+      double scale = 0.0;
+      double opacity = 0.0;
+      bool isVisible = false;
+
+      if (diff == 0) {
+        scale = 1.0;
+        opacity = 1.0;
+        isVisible = true;
+      } else if (diff.abs() == 1) {
+        scale = 0.65;
+        opacity = 0.9;
+        isVisible = true;
+      } else if (diff.abs() == 2) {
+        scale = 0.45;
+        opacity = 0.6;
+        isVisible = true;
+      } else if (diff.abs() == 3) {
+        scale = 0.25;
+        opacity = 0.0;
+        isVisible = true;
+      }
+
+      const double baseSize = 160.0;
+
+      list.add(
+        AnimatedPositioned(
+          key: ValueKey(_items[index].id),
+          duration: const Duration(milliseconds: 600),
+          curve: Curves.easeInOut,
+          left: screenWidth / 2 - (baseSize / 2) + x,
+          top: centerY + y - (baseSize / 2),
+          child: IgnorePointer(
+            ignoring: !isVisible,
+            child: AnimatedOpacity(
+              duration: const Duration(milliseconds: 600),
+              curve: Curves.easeInOut,
+              opacity: opacity,
+              child: AnimatedScale(
+                scale: scale,
+                duration: const Duration(milliseconds: 600),
+                curve: Curves.easeInOut,
+                child: GestureDetector(
+                  onTap: () => _onItemTapped(index),
+                  child: Container(
+                    width: baseSize,
+                    height: baseSize,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      boxShadow: diff == 0
+                          ? [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.2),
+                                blurRadius: 20,
+                                spreadRadius: 2,
+                                offset: const Offset(0, 10),
+                              )
+                            ]
+                          : [
+                              BoxShadow(
+                                color: Colors.black.withValues(alpha: 0.1),
+                                blurRadius: 8,
+                                offset: const Offset(0, 4),
+                              )
+                            ],
+                    ),
+                    child: ClipOval(
+                      child: Container(
+                        color: Colors.white,
+                        padding: EdgeInsets.all(diff == 0 ? 6 : 4),
+                        child: ClipOval(
+                          child: Image.asset(
+                            _popularImages[_items[index].name] ??
+                                _items[index].image,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
+
+    // Sort to ensure the center item is drawn last (on top of others)
+    list.sort((a, b) {
+      int getDiff(Key? key) {
+        if (key == null) return 100;
+        final id = (key as ValueKey).value as String;
+        int idx = _items.indexWhere((item) => item.id == id);
+        int diff = idx - _currentIndex;
+        int halfLen = _items.length ~/ 2;
+        if (diff < -halfLen) diff += _items.length;
+        if (diff > _items.length - halfLen - 1) diff -= _items.length;
+        return diff.abs();
+      }
+
+      return getDiff(b.key).compareTo(getDiff(a.key));
+    });
+
+    return list;
   }
 
   Widget _buildInfoCard(MenuItem item) {
@@ -312,7 +323,7 @@ class _CircularPopularCarouselState
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
+              color: Colors.black.withValues(alpha: 0.05),
               blurRadius: 10,
               offset: const Offset(0, 4),
             ),
@@ -336,6 +347,7 @@ class _CircularPopularCarouselState
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     item.name,
@@ -387,6 +399,7 @@ class _CircularPopularCarouselState
             // Price & Add to Cart
             Column(
               crossAxisAlignment: CrossAxisAlignment.end,
+              mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   '₹${item.priceL ?? item.price}',
@@ -421,6 +434,7 @@ class _CircularPopularCarouselState
                       borderRadius: BorderRadius.circular(20),
                     ),
                     child: const Row(
+                      mainAxisSize: MainAxisSize.min,
                       children: [
                         Icon(Icons.shopping_cart_outlined,
                             size: 14, color: Colors.white),

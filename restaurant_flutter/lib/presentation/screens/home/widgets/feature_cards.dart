@@ -20,62 +20,51 @@ class FeatureCards extends StatelessWidget {
       child: Row(
         children: _features
             .map((f) => Expanded(
-                  child: GestureDetector(
-                    onTap: () {
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(
-                          content: Text(
-                              '${f.title.replaceAll('\n', ' ')} feature coming soon!'),
-                          duration: const Duration(seconds: 2),
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 4),
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 18, horizontal: 6),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.04),
+                          blurRadius: 16,
+                          spreadRadius: 2,
+                          offset: const Offset(0, 8),
                         ),
-                      );
-                    },
-                    child: Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 4),
-                      padding: const EdgeInsets.symmetric(
-                          vertical: 18, horizontal: 6),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.04),
-                            blurRadius: 16,
-                            spreadRadius: 2,
-                            offset: const Offset(0, 8),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(f.icon, color: f.color, size: 28),
+                        const SizedBox(height: 12),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            f.title,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.w800,
+                                fontSize: 11,
+                                color: Colors.black87),
+                            textAlign: TextAlign.center,
                           ),
-                        ],
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(f.icon, color: f.color, size: 28),
-                          const SizedBox(height: 12),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              f.title,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 11,
-                                  color: Colors.black87),
-                              textAlign: TextAlign.center,
-                            ),
+                        ),
+                        const SizedBox(height: 4),
+                        FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: Text(
+                            f.subtitle,
+                            style: const TextStyle(
+                                fontSize: 9,
+                                color: Colors.black54,
+                                fontWeight: FontWeight.w600),
+                            textAlign: TextAlign.center,
                           ),
-                          const SizedBox(height: 4),
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              f.subtitle,
-                              style: const TextStyle(
-                                  fontSize: 9,
-                                  color: Colors.black54,
-                                  fontWeight: FontWeight.w600),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ))

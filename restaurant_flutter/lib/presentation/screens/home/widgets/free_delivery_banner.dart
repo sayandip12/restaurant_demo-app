@@ -19,7 +19,7 @@ class FreeDeliveryBanner extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: Colors.green.withOpacity(0.15),
+            color: Colors.green.withValues(alpha: 0.15),
             blurRadius: 16,
             spreadRadius: 2,
             offset: const Offset(0, 8),
@@ -33,26 +33,29 @@ class FreeDeliveryBanner extends StatelessWidget {
           const Icon(Icons.moped, color: AppColors.primary, size: 40),
           // Text center
           Expanded(
-            child: Column(
-              children: const [
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text('FREE DELIVERY',
-                      style: TextStyle(
-                          color: AppColors.primary,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 16)),
-                ),
-                SizedBox(height: 4),
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text('On orders above ₹199',
-                      style: TextStyle(
-                          color: Colors.black87,
-                          fontSize: 13,
-                          fontWeight: FontWeight.w600)),
-                ),
-              ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8),
+              child: Column(
+                children: const [
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text('FREE DELIVERY',
+                        style: TextStyle(
+                            color: AppColors.primary,
+                            fontWeight: FontWeight.w800,
+                            fontSize: 16)),
+                  ),
+                  SizedBox(height: 4),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text('Free Delivery Available Within 2.5 KM',
+                        style: TextStyle(
+                            color: Colors.black87,
+                            fontSize: 13,
+                            fontWeight: FontWeight.w600)),
+                  ),
+                ],
+              ),
             ),
           ),
           // Scooter right (flipped)

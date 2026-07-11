@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/constants/app_colors.dart';
 
 class HomeHeader extends StatelessWidget {
@@ -14,7 +15,7 @@ class HomeHeader extends StatelessWidget {
       scrolledUnderElevation: 0,
       leading: IconButton(
         icon: const Icon(Icons.menu, color: Colors.black, size: 28),
-        onPressed: () {},
+        onPressed: () => context.push('/menu'),
       ),
       title: Row(
         children: [
@@ -35,7 +36,7 @@ class HomeHeader extends StatelessWidget {
               Text(
                 'AUTHENTIC CUISINE',
                 style: TextStyle(
-                  color: AppColors.accent.withOpacity(0.9),
+                  color: AppColors.accent.withValues(alpha: 0.9),
                   letterSpacing: 1.5,
                   fontSize: 8,
                   fontWeight: FontWeight.bold,
@@ -48,14 +49,14 @@ class HomeHeader extends StatelessWidget {
       actions: [
         IconButton(
           icon: const Icon(Icons.security_outlined, color: Colors.black87),
-          onPressed: () {},
+          onPressed: () => context.push('/profile'),
         ),
         Stack(
           alignment: Alignment.center,
           children: [
             IconButton(
               icon: const Icon(Icons.notifications_none, color: Colors.black87),
-              onPressed: () {},
+              onPressed: () => context.push('/offers'),
             ),
             Positioned(
               right: 12,

@@ -14,7 +14,7 @@ class HeroSection extends StatelessWidget {
         // Background layer
         Positioned.fill(
           child: Opacity(
-            opacity: 0.35,
+            opacity: 0.08,
             child: Image.asset(
               'assets/images/hero/kolkata_bg.png',
               fit: BoxFit.cover,
@@ -34,7 +34,7 @@ class HeroSection extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  const Color(0xFFFDFBF7).withOpacity(0.0),
+                  const Color(0xFFFDFBF7).withValues(alpha: 0.0),
                   const Color(0xFFFDFBF7),
                 ],
               ),
@@ -60,7 +60,7 @@ class HeroSection extends StatelessWidget {
                         Flexible(
                           child: Image.asset(
                             'assets/images/hero/title.png',
-                            height: 105,
+                            height: 112, // Large and premium
                             alignment: Alignment.centerLeft,
                           ),
                         ),
@@ -137,21 +137,22 @@ class HeroSection extends StatelessWidget {
                     children: [
                       // Chicken rice top plate (BEHIND CHEF)
                       Positioned(
-                        top: 0,
-                        right: 25,
+                        top: 5,
+                        right: 15, // Moved closer to chef (relative to 25)
                         child: Image.asset(
                           'assets/images/hero/chicken_rice.png',
-                          height: 145,
+                          height: 155, // Increased size slightly
                           fit: BoxFit.contain,
                         ),
                       ),
                       // Chef image (IN FRONT)
                       Positioned(
                         bottom: -10,
-                        right: -30,
+                        right:
+                            -20, // Keep him on the right, prevent overlap with typography
                         child: Image.asset(
                           'assets/images/hero/chef.png',
-                          height: 275, // Increased height
+                          height: 242, // Reduced by ~12% from 275
                           fit: BoxFit.contain,
                         ),
                       ),

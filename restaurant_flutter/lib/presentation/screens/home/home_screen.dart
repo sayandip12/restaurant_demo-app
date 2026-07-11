@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/constants/app_colors.dart';
 import '../../../core/constants/app_spacing.dart';
 import 'widgets/circular_popular_carousel.dart';
 import 'widgets/home_header.dart';
@@ -9,7 +7,6 @@ import 'widgets/hero_section.dart';
 import 'widgets/feature_cards.dart';
 import 'widgets/free_delivery_banner.dart';
 import 'widgets/footer_info.dart';
-import 'widgets/home_background.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
